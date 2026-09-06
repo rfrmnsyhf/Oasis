@@ -1,0 +1,115 @@
+---
+const links = [
+  { href: "/menu", label: "Menu" },
+  { href: "/#experience", label: "Experience" },
+  { href: "/gallery", label: "Gallery" },
+  { href: "/reviews", label: "Reviews" },
+  { href: "/location", label: "Location" },
+];
+---
+
+<header
+  id="site-nav"
+  class="fixed top-0 inset-x-0 z-40 transition-all duration-500"
+  data-state="top"
+>
+  <nav class="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-10 py-5 lg:py-6">
+    <a href="/" class="font-display text-2xl lg:text-3xl tracking-tight text-ivory data-[on=top]:text-ivory data-[on=scrolled]:text-forest transition-colors duration-500" data-navmark>
+      OASIS
+    </a>
+
+    <ul class="hidden md:flex items-center gap-9 text-[13px] uppercase tracking-[0.18em] text-ivory/85 data-[on=scrolled]:text-forest/80 transition-colors duration-500" data-navlinks>
+      {links.map((l) => (
+        <li>
+          <a
+            href={l.href}
+            class="hover:text-copper transition-colors"
+            data-navmark-link
+          >{l.label}</a>
+        </li>
+      ))}
+    </ul>
+
+    <a
+      href="/reserve"
+      class="hidden md:inline-flex items-center gap-2 px-5 py-2.5 text-[12px] uppercase tracking-[0.2em] border border-ivory/40 text-ivory hover:bg-ivory hover:text-forest transition-all duration-300 data-[on=scrolled]:border-forest data-[on=scrolled]:text-forest data-[on=scrolled]:hover:bg-forest data-[on=scrolled]:hover:text-ivory"
+      data-navcta
+    >
+      Reserve
+    </a>
+
+    <button
+      id="nav-toggle"
+      class="md:hidden text-ivory data-[on=scrolled]:text-forest transition-colors"
+      aria-label="Open menu"
+      aria-expanded="false"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <line x1="3" y1="8" x2="21" y2="8"/>
+        <line x1="3" y1="16" x2="21" y2="16"/>
+      </svg>
+    </button>
+  </nav>
+
+  <div
+    id="nav-mobile"
+    class="md:hidden hidden bg-ivory/95 backdrop-blur-lg border-t border-charcoal/10"
+  >
+    <ul class="flex flex-col py-6 px-6 gap-5 text-sm uppercase tracking-[0.18em] text-forest">
+      {links.map((l) => (
+        <li><a href={l.href} class="block py-1">{l.label}</a></li>
+      ))}
+      <li>
+        <a href="/reserve" class="inline-block mt-2 px-5 py-2.5 border border-forest text-forest uppercase tracking-[0.2em] text-[12px]">
+          Reserve
+        </a>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<script>
+  const nav = document.getElementById("site-nav");
+  if (nav) {
+    const setState = (state: "top" | "scrolled") => {
+      nav.dataset.state = state;
+      nav.querySelectorAll<HTMLElement>("[data-navmark]").forEach((el) => {
+        el.dataset.on = state;
+        if (state === "top") {
+          el.classList.add("text-ivory");
+          el.classList.remove("text-forest");
+        } else {
+          el.classList.add("text-forest");
+          el.classList.remove("text-ivory");
+        }
+      });
+      nav.querySelectorAll<HTMLElement>("[data-navlinks]").forEach((el) => el.dataset.on = state);
+      nav.querySelectorAll<HTMLElement>("[data-navcta]").forEach((el) => el.dataset.on = state);
+      nav.querySelectorAll<HTMLElement>("#nav-toggle").forEach((el) => el.dataset.on = state);
+      if (state === "scrolled") {
+        nav.classList.add("glass");
+        nav.classList.remove("text-ivory");
+      } else {
+        nav.classList.remove("glass");
+      }
+    };
+
+    const onScroll = () => {
+      setState(window.scrollY > 40 ? "scrolled" : "top");
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    const toggle = document.getElementById("nav-toggle");
+    const mobile = document.getElementById("nav-mobile");
+    if (toggle && mobile) {
+      toggle.addEventListener("click", () => {
+        const open = mobile.classList.toggle("hidden") === false;
+        toggle.setAttribute("aria-expanded", String(open));
+      });
+      mobile.querySelectorAll("a").forEach((a) =>
+        a.addEventListener("click", () => mobile.classList.add("hidden")),
+      );
+    }
+  }
+</script>

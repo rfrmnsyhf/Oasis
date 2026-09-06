@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://oasis-tanjungpinang.com/sitemap-index.xml

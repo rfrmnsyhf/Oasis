@@ -1,0 +1,38 @@
+---
+import { restaurant } from "../data/restaurant";
+---
+
+<section id="intro" class="bg-ivory py-24 lg:py-40">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-end">
+      <div class="lg:col-span-7 reveal">
+        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">The OASIS promise</div>
+        <h2 class="font-display text-4xl sm:text-5xl lg:text-7xl leading-[0.98] mt-5 text-charcoal">
+          More than a meal.<br/>
+          It's your <em class="italic font-light">little escape.</em>
+        </h2>
+      </div>
+      <div class="lg:col-span-5 reveal" style="transition-delay: .15s">
+        <p class="text-charcoal/70 text-base lg:text-lg leading-relaxed">
+          {restaurant.description} A modern restaurant in Tanjungpinang where good food, thoughtful spaces and easy conversations come together.
+        </p>
+        <div class="mt-8 flex items-center gap-6 text-[12px] uppercase tracking-[0.22em]">
+          <div>
+            <div class="text-charcoal/40">Since</div>
+            <div class="text-forest font-medium">2021</div>
+          </div>
+          <div class="w-px h-8 bg-charcoal/15"></div>
+          <div>
+            <div class="text-charcoal/40">Located</div>
+            <div class="text-forest font-medium">Tanjungpinang</div>
+          </div>
+          <div class="w-px h-8 bg-charcoal/15"></div>
+          <div>
+            <div class="text-charcoal/40">Style</div>
+            <div class="text-forest font-medium">Casual Premium</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

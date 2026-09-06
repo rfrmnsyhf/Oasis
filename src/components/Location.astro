@@ -1,0 +1,77 @@
+---
+import { restaurant } from "../data/restaurant";
+const mapsEmbed = "https://www.google.com/maps?q=" + encodeURIComponent(restaurant.address.line1 + ", " + restaurant.address.line2) + "&output=embed";
+---
+
+<section id="location" class="bg-ivory py-24 lg:py-36">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-end reveal">
+      <div class="lg:col-span-7">
+        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">Location</div>
+        <h2 class="font-display text-4xl sm:text-5xl lg:text-7xl leading-[0.98] mt-4">
+          Find OASIS.
+        </h2>
+      </div>
+      <div class="lg:col-span-5">
+        <a
+          href={restaurant.social.googleMapsUrl}
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.22em] text-forest hover:text-copper transition-colors"
+        >
+          Get directions →
+        </a>
+      </div>
+    </div>
+
+    <div class="mt-14 lg:mt-20 grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div class="lg:col-span-7 relative overflow-hidden bg-mist aspect-[4/3] lg:aspect-auto lg:min-h-[420px] reveal">
+        <iframe
+          src={mapsEmbed}
+          title="OASIS location map"
+          class="absolute inset-0 w-full h-full"
+          style="border:0;"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+
+      <div class="lg:col-span-5 space-y-8 reveal" style="transition-delay: .12s">
+        <div>
+          <div class="text-[10px] uppercase tracking-[0.28em] text-charcoal/40">Address</div>
+          <p class="mt-2 text-lg leading-relaxed">
+            {restaurant.address.line1}<br/>
+            {restaurant.address.line2}<br/>
+            {restaurant.address.province}
+          </p>
+          <div class="mt-2 text-[11px] uppercase tracking-[0.22em] text-copper">
+            {restaurant.address.plusCode}
+          </div>
+        </div>
+
+        <div>
+          <div class="text-[10px] uppercase tracking-[0.28em] text-charcoal/40 mb-3">Hours</div>
+          <ul class="space-y-1.5 text-sm">
+            {restaurant.hours.map((h) => (
+              <li class="flex items-baseline justify-between border-b border-charcoal/10 pb-1.5">
+                <span class="text-charcoal/80">{h.day}</span>
+                <span class="text-charcoal/60 tabular-nums">{h.open} – {h.close}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <div class="text-[10px] uppercase tracking-[0.28em] text-charcoal/40 mb-3">Services</div>
+          <ul class="flex flex-wrap gap-2">
+            {restaurant.services.map((s) => (
+              <li class="px-4 py-2 text-[12px] uppercase tracking-[0.22em] border border-charcoal/15 text-charcoal/80">
+                {s}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

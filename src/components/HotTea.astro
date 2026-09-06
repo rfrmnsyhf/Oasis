@@ -1,0 +1,22 @@
+---
+import { hotTeas } from "../data/menu";
+---
+
+<section class="bg-ivory py-20 lg:py-28 border-t border-charcoal/5">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center reveal">
+      <div class="lg:col-span-3">
+        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">Hot Tea</div>
+        <h2 class="font-display text-3xl lg:text-4xl mt-3 leading-tight">A quiet cup, at the end.</h2>
+      </div>
+      <div class="lg:col-span-9">
+        <p class="text-charcoal/80 text-lg lg:text-xl leading-relaxed font-display italic">
+          {hotTeas.map((t) => t.name).join(" · ")}
+        </p>
+        <div class="mt-4 text-[12px] uppercase tracking-[0.22em] text-charcoal/50">
+          15K / cup
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

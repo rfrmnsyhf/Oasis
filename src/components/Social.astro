@@ -1,0 +1,45 @@
+---
+import { restaurant } from "../data/restaurant";
+---
+
+<section class="bg-mist py-24 lg:py-36">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 reveal">
+      <a
+        href={restaurant.social.instagramUrl}
+        target="_blank"
+        rel="noopener"
+        class="group relative overflow-hidden bg-charcoal text-ivory p-8 lg:p-12 min-h-[260px] flex flex-col justify-between"
+      >
+        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">Instagram</div>
+        <div>
+          <div class="font-display text-4xl lg:text-5xl leading-tight">{restaurant.social.instagramHandle}</div>
+          <p class="text-ivory/70 mt-3 text-sm leading-relaxed max-w-sm">
+            Daily moments. Food. People. OASIS.
+          </p>
+        </div>
+        <div class="text-[12px] uppercase tracking-[0.22em] text-ivory/80 group-hover:text-copper transition-colors">
+          Follow on Instagram →
+        </div>
+      </a>
+
+      <a
+        href={restaurant.social.tiktokUrl}
+        target="_blank"
+        rel="noopener"
+        class="group relative overflow-hidden bg-forest text-ivory p-8 lg:p-12 min-h-[260px] flex flex-col justify-between"
+      >
+        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">TikTok</div>
+        <div>
+          <div class="font-display text-4xl lg:text-5xl leading-tight">{restaurant.social.tiktokHandle}</div>
+          <p class="text-ivory/70 mt-3 text-sm leading-relaxed max-w-sm">
+            See OASIS in motion.
+          </p>
+        </div>
+        <div class="text-[12px] uppercase tracking-[0.22em] text-ivory/80 group-hover:text-copper transition-colors">
+          Watch on TikTok →
+        </div>
+      </a>
+    </div>
+  </div>
+</section>

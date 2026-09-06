@@ -1,0 +1,56 @@
+---
+import { gallery } from "../data/gallery";
+---
+
+<section class="bg-ivory py-24 lg:py-36">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end reveal">
+      <div class="lg:col-span-7">
+        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">Gallery</div>
+        <h2 class="font-display text-4xl sm:text-5xl lg:text-7xl leading-[0.98] mt-4">
+          OASIS through<br/>
+          <em class="italic font-light">your eyes.</em>
+        </h2>
+      </div>
+      <div class="lg:col-span-5">
+        <p class="text-charcoal/70 text-base lg:text-lg leading-relaxed">
+          A few of our favourite moments — interior, food, people. Curated for the camera.
+        </p>
+        <a
+          href="/gallery"
+          class="inline-flex items-center gap-2 mt-5 text-[12px] uppercase tracking-[0.22em] text-forest hover:text-copper transition-colors"
+        >
+          See full gallery →
+        </a>
+      </div>
+    </div>
+
+    <div class="mt-14 lg:mt-20 grid grid-cols-2 lg:grid-cols-4 auto-rows-[120px] sm:auto-rows-[160px] lg:auto-rows-[180px] gap-3 lg:gap-4">
+      {gallery.slice(0, 8).map((g, i) => {
+        const span =
+          g.span === "tall" ? "row-span-2" :
+          g.span === "wide" ? "col-span-2" : "";
+        return (
+          <a
+            href={g.src}
+            target="_blank"
+            rel="noopener"
+            class:list={["group relative overflow-hidden bg-charcoal reveal", span]}
+            style={`transition-delay: ${i * 60}ms`}
+          >
+            <img
+              src={g.src}
+              alt={g.alt}
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.06]"
+              loading="lazy"
+            />
+            <div class="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/20 transition-colors duration-500"></div>
+            <div class="absolute left-3 bottom-3 text-[10px] uppercase tracking-[0.22em] text-ivory/0 group-hover:text-ivory/90 transition-colors">
+              {g.tag}
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</section>

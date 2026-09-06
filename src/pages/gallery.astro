@@ -1,0 +1,50 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { gallery } from "../data/gallery";
+---
+
+<Layout
+  title="Gallery | OASIS Restaurant Tanjungpinang"
+  description="Photos from OASIS Restaurant — interior, food, people, and the spaces in between."
+>
+  <section class="bg-ivory pt-32 pb-12 lg:pt-40 lg:pb-16">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+      <div class="text-[11px] uppercase tracking-[0.32em] text-copper">Gallery</div>
+      <h1 class="font-display text-5xl lg:text-8xl leading-[0.95] mt-4">
+        OASIS through<br/>your eyes.
+      </h1>
+    </div>
+  </section>
+
+  <section class="bg-ivory pb-24 lg:pb-36">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+      <div class="grid grid-cols-2 lg:grid-cols-4 auto-rows-[140px] sm:auto-rows-[180px] lg:auto-rows-[200px] gap-3 lg:gap-4">
+        {gallery.map((g, i) => {
+          const span =
+            g.span === "tall" ? "row-span-2" :
+            g.span === "wide" ? "col-span-2" : "";
+          return (
+            <a
+              href={g.src}
+              target="_blank"
+              rel="noopener"
+              class:list={["group relative overflow-hidden bg-charcoal reveal", span]}
+              style={`transition-delay: ${(i % 8) * 50}ms`}
+            >
+              <img
+                src={g.src}
+                alt={g.alt}
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.06]"
+                loading="lazy"
+              />
+              <div class="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/30 transition-colors duration-500"></div>
+              <div class="absolute left-3 bottom-3 text-[10px] uppercase tracking-[0.22em] text-ivory/0 group-hover:text-ivory transition-colors">
+                {g.tag}
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</Layout>

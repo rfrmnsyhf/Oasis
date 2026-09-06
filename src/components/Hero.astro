@@ -1,0 +1,103 @@
+---
+import { restaurant } from "../data/restaurant";
+---
+
+<section class="relative min-h-screen w-full overflow-hidden bg-charcoal text-ivory grain">
+  <div class="absolute inset-0">
+    <img
+      src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=2400&q=80"
+      alt=""
+      class="w-full h-full object-cover scale-[1.05] hero-bg"
+      loading="eager"
+      decoding="async"
+      fetchpriority="high"
+    />
+    <div class="absolute inset-0 cinematic-overlay"></div>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 pt-36 lg:pt-44 pb-24 lg:pb-32 min-h-screen flex flex-col justify-end">
+    <div class="max-w-3xl hero-text">
+      <div class="text-[11px] uppercase tracking-[0.32em] text-ivory/70 hero-fade" style="transition-delay: .1s">
+        {restaurant.tagline}
+      </div>
+
+      <h1 class="font-display text-5xl sm:text-6xl lg:text-8xl leading-[0.95] tracking-tight mt-6 hero-fade" style="transition-delay: .25s">
+        A place to eat,<br/>
+        gather <em class="italic font-light text-copper">and stay</em> awhile.
+      </h1>
+
+      <p class="mt-6 max-w-xl text-ivory/75 text-base lg:text-lg leading-relaxed hero-fade" style="transition-delay: .4s">
+        {restaurant.description}
+      </p>
+
+      <div class="mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 hero-fade" style="transition-delay: .55s">
+        <a
+          href="/menu"
+          class="inline-flex items-center justify-center gap-3 px-7 py-4 bg-ivory text-forest text-[13px] uppercase tracking-[0.22em] hover:bg-copper hover:text-ivory transition-colors duration-300"
+        >
+          Explore Menu
+          <span aria-hidden="true">→</span>
+        </a>
+        <a
+          href="/reserve"
+          class="inline-flex items-center justify-center gap-3 px-7 py-4 border border-ivory/60 text-ivory text-[13px] uppercase tracking-[0.22em] hover:bg-ivory/10 transition-colors duration-300"
+        >
+          Reserve a Table
+        </a>
+      </div>
+
+      <div class="mt-12 flex items-center gap-4 text-ivory/70 text-sm hero-fade" style="transition-delay: .75s">
+        <div class="flex items-center gap-1 text-copper">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class={i >= Math.round(restaurant.rating) ? "opacity-30" : ""}>
+              <path d="M12 2l2.9 6.9 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.5l7.1-.6L12 2z" />
+            </svg>
+          ))}
+        </div>
+        <span class="font-medium text-ivory">{restaurant.rating} / 5</span>
+        <span class="text-ivory/40">·</span>
+        <span>{restaurant.reviewCount} Google Reviews</span>
+      </div>
+    </div>
+  </div>
+
+  <a
+    href="#intro"
+    class="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 text-ivory/60 hover:text-ivory transition-colors items-center gap-3 text-[11px] uppercase tracking-[0.32em]"
+  >
+    <span>Scroll</span>
+    <span class="block w-px h-10 bg-ivory/40 hero-line"></span>
+  </a>
+</section>
+
+<style>
+  .hero-fade {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: heroIn 1.1s cubic-bezier(0.2, 0.7, 0.1, 1) forwards;
+  }
+  .hero-bg {
+    animation: heroZoom 1.6s cubic-bezier(0.2, 0.7, 0.1, 1) forwards;
+  }
+  .hero-line {
+    transform-origin: top;
+    animation: heroLine 1.6s 0.4s cubic-bezier(0.2, 0.7, 0.1, 1) forwards;
+    transform: scaleY(0);
+  }
+  @keyframes heroIn {
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes heroZoom {
+    to { transform: scale(1); }
+  }
+  @keyframes heroLine {
+    to { transform: scaleY(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-fade, .hero-bg, .hero-line {
+      animation: none !important;
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

@@ -1,0 +1,186 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { menu, categories, type Category } from "../data/menu";
+import { formatIDR } from "../utils/formatCurrency";
+---
+
+<Layout
+  title="Menu | OASIS Restaurant Tanjungpinang"
+  description="The full OASIS menu — Asian-inspired dishes, breakfast, dessert, cold drinks and hot tea. Updated regularly."
+>
+  <section class="bg-ivory pt-32 pb-12 lg:pt-40 lg:pb-16">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+      <div class="text-[11px] uppercase tracking-[0.32em] text-copper">Menu</div>
+      <h1 class="font-display text-5xl lg:text-8xl leading-[0.95] mt-4">The whole list.</h1>
+      <p class="mt-6 text-charcoal/70 max-w-xl text-base lg:text-lg">
+        Hover or tap a dish for the photograph. Prices in IDR, no service charge.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-ivory sticky top-16 lg:top-20 z-20 border-y border-charcoal/10 backdrop-blur-md bg-ivory/85">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 overflow-x-auto scrollbar-none">
+      <ul class="flex gap-1 py-3">
+        <li>
+          <a
+            href="#all"
+            data-cat="all"
+            class="cat-tab px-4 py-2 text-[12px] uppercase tracking-[0.22em] text-forest border-b-2 border-copper"
+          >All</a>
+        </li>
+        {categories.map((c) => (
+          <li>
+            <a
+              href={`#${c.id}`}
+              data-cat={c.id}
+              class="cat-tab px-4 py-2 text-[12px] uppercase tracking-[0.22em] text-charcoal/60 hover:text-forest border-b-2 border-transparent transition-colors"
+            >{c.label}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="bg-ivory py-16 lg:py-24">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+      <div id="cat-all" class="mb-20">
+        <h2 class="font-display text-3xl lg:text-4xl mb-8">All</h2>
+        <ul class="divide-y divide-charcoal/10">
+          {menu.map((it) => (
+            <li
+              class="menu-item group relative py-6 cursor-pointer"
+              data-image={it.image}
+              data-name={it.name}
+            >
+              <div class="flex items-baseline justify-between gap-6">
+                <div>
+                  <div class="font-display text-2xl lg:text-3xl leading-tight group-hover:text-forest transition-colors">
+                    {it.name}
+                  </div>
+                  <p class="mt-2 text-sm text-charcoal/65 max-w-2xl leading-relaxed">
+                    {it.description}
+                  </p>
+                  <div class="mt-2 text-[10px] uppercase tracking-[0.22em] text-charcoal/40">
+                    {categories.find((c) => c.id === it.category)?.label}
+                  </div>
+                </div>
+                <div class="font-display text-xl lg:text-2xl text-copper tabular-nums shrink-0">
+                  {formatIDR(it.price)}
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {categories.map((c) => {
+        const items = menu.filter((i) => i.category === c.id);
+        if (items.length === 0) return null;
+        return (
+          <div id={`cat-${c.id}`} class="mb-20 scroll-mt-32">
+            <h2 class="font-display text-3xl lg:text-4xl mb-8">{c.label}</h2>
+            <ul class="divide-y divide-charcoal/10">
+              {items.map((it) => (
+                <li
+                  class="menu-item group relative py-6 cursor-pointer"
+                  data-image={it.image}
+                  data-name={it.name}
+                >
+                  <div class="flex items-baseline justify-between gap-6">
+                    <div>
+                      <div class="font-display text-2xl lg:text-3xl leading-tight group-hover:text-forest transition-colors">
+                        {it.name}
+                      </div>
+                      <p class="mt-2 text-sm text-charcoal/65 max-w-2xl leading-relaxed">
+                        {it.description}
+                      </p>
+                    </div>
+                    <div class="font-display text-xl lg:text-2xl text-copper tabular-nums shrink-0">
+                      {formatIDR(it.price)}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+
+  <div
+    id="hover-img"
+    class="pointer-events-none fixed z-30 hidden lg:block size-64 overflow-hidden bg-charcoal shadow-2xl opacity-0 transition-opacity duration-200"
+    style="top: 0; left: 0;"
+  >
+    <img id="hover-img-el" src="" alt="" class="w-full h-full object-cover" />
+  </div>
+</Layout>
+
+<script>
+  const tabs = document.querySelectorAll<HTMLAnchorElement>(".cat-tab");
+  tabs.forEach((t) =>
+    t.addEventListener("click", () => {
+      tabs.forEach((x) => {
+        x.classList.add("text-charcoal/60", "border-transparent");
+        x.classList.remove("text-forest", "border-copper");
+      });
+      t.classList.add("text-forest", "border-copper");
+      t.classList.remove("text-charcoal/60", "border-transparent");
+    }),
+  );
+
+  const hover = document.getElementById("hover-img");
+  const hoverImg = document.getElementById("hover-img-el") as HTMLImageElement | null;
+  const items = document.querySelectorAll<HTMLElement>(".menu-item");
+
+  const move = (e: MouseEvent) => {
+    if (!hover) return;
+    const w = 256, h = 256;
+    const x = Math.min(window.innerWidth - w - 16, e.clientX + 24);
+    const y = Math.min(window.innerHeight - h - 16, e.clientY + 24);
+    hover.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+  };
+
+  items.forEach((it) => {
+    it.addEventListener("mouseenter", (e) => {
+      const img = it.dataset.image || "";
+      const name = it.dataset.name || "";
+      if (!img || !hover || !hoverImg) return;
+      hoverImg.src = img;
+      hoverImg.alt = name;
+      hover.classList.remove("opacity-0");
+      hover.classList.add("opacity-100");
+      move(e as MouseEvent);
+      document.addEventListener("mousemove", move);
+    });
+    it.addEventListener("mouseleave", () => {
+      if (!hover) return;
+      hover.classList.add("opacity-0");
+      hover.classList.remove("opacity-100");
+      document.removeEventListener("mousemove", move);
+    });
+
+    it.addEventListener("click", () => {
+      if (window.matchMedia("(min-width: 1024px)").matches) return;
+      const img = it.dataset.image || "";
+      const name = it.dataset.name || "";
+      if (!img || !hover || !hoverImg) return;
+      const visible = !hover.classList.contains("opacity-0");
+      document.querySelectorAll<HTMLElement>(".menu-item").forEach((x) => x.classList.remove("is-tapped"));
+      if (visible) {
+        hover.classList.add("opacity-0");
+        hover.classList.remove("opacity-100");
+        return;
+      }
+      hoverImg.src = img;
+      hoverImg.alt = name;
+      hover.classList.remove("hidden");
+      hover.classList.remove("opacity-0");
+      hover.classList.add("opacity-100");
+      const r = it.getBoundingClientRect();
+      hover.style.transform = `translate3d(${Math.max(8, Math.min(window.innerWidth - 264, r.left))}px, ${Math.min(window.innerHeight - 280, r.bottom + 12)}px, 0)`;
+      it.classList.add("is-tapped");
+    });
+  });
+</script>
