@@ -23,9 +23,9 @@ export const restaurant = {
     { day: "Sunday", open: "11:00", close: "22:00" },
   ],
   services: ["Dine-in", "Takeaway", "Online ordering via GoFood"],
-  phone: null as string | null,
-  whatsapp: null as string | null,
-  reservationEnabled: false,
+  phone: "+62 811-7009-998",
+  whatsapp: "628117009998",
+  reservationEnabled: true,
   social: {
     instagramHandle: "@oasisbintan",
     instagramUrl: "https://www.instagram.com/oasisbintan",

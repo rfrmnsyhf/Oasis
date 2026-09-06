@@ -37,7 +37,7 @@ export const menu: MenuItem[] = [
     price: 36000,
     description:
       "Aromatic coconut rice served with sambal, crispy anchovies, peanuts and a soft-boiled egg.",
-    image: img("photo-1563245372-f21724e3856d", 1200),
+    image: img("photo-1626777552726-4a6b54c97e46", 1200),
     featured: true,
   },
   {
@@ -321,7 +321,7 @@ export const menu: MenuItem[] = [
     price: 34000,
     description:
       "Strawberry, mint and lime over crushed ice — non-alcoholic.",
-    image: img("photo-1513558161293-cdaf765ed514", 800),
+    image: img("photo-1497534446932-c925b458314e", 800),
   },
   {
     name: "Yuzu Soda Pop",
