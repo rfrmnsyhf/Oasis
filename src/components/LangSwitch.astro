@@ -9,67 +9,91 @@ interface Props {
 }
 
 const { lang, variant, idHref, enHref } = Astro.props;
-
-const desktopCls = (active: boolean) =>
-  active
-    ? "bg-ivory text-forest border border-ivory shadow-[0_0_0_1px_rgba(23,27,22,0.15)]"
-    : "text-ivory/80 hover:text-ivory border border-transparent";
-
-const mobileCls = (active: boolean) =>
-  active
-    ? "bg-forest text-ivory"
-    : "text-forest/70 hover:text-forest";
+const idActive = lang === "id";
+const enActive = lang === "en";
 ---
 
 {variant === "desktop" ? (
   <div
-    class="inline-flex items-stretch text-[11px] uppercase tracking-[0.22em] border border-ivory/40 transition-colors duration-500 rounded-sm overflow-hidden"
+    class="oasis-lang inline-flex items-stretch text-[11px] uppercase tracking-[0.22em] rounded-sm overflow-hidden border border-current/30"
     data-langtoggle
     role="group"
     aria-label="Language switcher"
   >
     <a
       href={idHref}
-      aria-current={lang === "id" ? "true" : undefined}
       aria-label="Bahasa Indonesia"
+      aria-current={idActive ? "true" : undefined}
       data-langbtn
       data-lang-target="id"
-      data-navtoggle-active={lang === "id" ? "" : undefined}
-      class:list={["px-3 py-1.5 font-semibold transition-colors", desktopCls(lang === "id")]}
+      class="oasis-lang-btn oasis-lang-id px-3 py-1.5 font-semibold transition-colors"
     >ID</a>
-    <span class="w-px bg-ivory/30" aria-hidden="true"></span>
+    <span class="oasis-lang-divider w-px" aria-hidden="true"></span>
     <a
       href={enHref}
-      aria-current={lang === "en" ? "true" : undefined}
       aria-label="English"
+      aria-current={enActive ? "true" : undefined}
       data-langbtn
       data-lang-target="en"
-      data-navtoggle-active={lang === "en" ? "" : undefined}
-      class:list={["px-3 py-1.5 font-semibold transition-colors", desktopCls(lang === "en")]}
+      class="oasis-lang-btn oasis-lang-en px-3 py-1.5 font-semibold transition-colors"
     >EN</a>
   </div>
 ) : (
   <div
-    class="inline-flex items-stretch text-[11px] uppercase tracking-[0.22em] border border-forest/30 rounded-sm overflow-hidden w-fit"
+    class="oasis-lang inline-flex items-stretch text-[11px] uppercase tracking-[0.22em] border border-current/30 rounded-sm overflow-hidden w-fit"
+    data-langtoggle
     role="group"
     aria-label="Language switcher"
   >
     <a
       href={idHref}
-      aria-current={lang === "id" ? "true" : undefined}
       aria-label="Bahasa Indonesia"
+      aria-current={idActive ? "true" : undefined}
       data-langbtn
       data-lang-target="id"
-      class:list={["px-3 py-1.5 font-semibold transition-colors", mobileCls(lang === "id")]}
+      class="oasis-lang-btn oasis-lang-id px-3 py-1.5 font-semibold transition-colors"
     >ID</a>
-    <span class="w-px bg-forest/30" aria-hidden="true"></span>
+    <span class="oasis-lang-divider w-px" aria-hidden="true"></span>
     <a
       href={enHref}
-      aria-current={lang === "en" ? "true" : undefined}
       aria-label="English"
+      aria-current={enActive ? "true" : undefined}
       data-langbtn
       data-lang-target="en"
-      class:list={["px-3 py-1.5 font-semibold transition-colors", mobileCls(lang === "en")]}
+      class="oasis-lang-btn oasis-lang-en px-3 py-1.5 font-semibold transition-colors"
     >EN</a>
   </div>
 )}
+
+<style is:global>
+  .oasis-lang {
+    --lang-active-bg: #F4F0E8;
+    --lang-active-fg: #173B32;
+    --lang-inactive-fg: rgba(244, 240, 232, 0.75);
+    --lang-divider: rgba(244, 240, 232, 0.3);
+    color: var(--lang-inactive-fg);
+  }
+  .oasis-lang-btn {
+    background: transparent;
+    color: var(--lang-inactive-fg);
+  }
+  .oasis-lang-btn:hover {
+    color: var(--lang-active-bg);
+  }
+  .oasis-lang-btn[aria-current="true"] {
+    background: var(--lang-active-bg);
+    color: var(--lang-active-fg);
+    box-shadow: 0 0 0 1px rgba(23, 27, 22, 0.12);
+  }
+  .oasis-lang-divider {
+    background: var(--lang-divider);
+  }
+
+  [data-state="scrolled"] .oasis-lang,
+  body[data-lang="id"] header[data-state="scrolled"] .oasis-lang {
+    --lang-active-bg: #173B32;
+    --lang-active-fg: #F4F0E8;
+    --lang-inactive-fg: rgba(23, 27, 22, 0.65);
+    --lang-divider: rgba(23, 27, 22, 0.25);
+  }
+</style>

@@ -277,6 +277,15 @@ const jsonLd = {
             var teas = lang === "en" ? data.hotTeasEn : data.hotTeasId;
             return Array.isArray(teas) ? teas.join(" · ") : null;
           });
+
+          // Toggle visual state — flip aria-current on the lang buttons
+          var btns = document.querySelectorAll("a[data-langbtn]");
+          for (var bi = 0; bi < btns.length; bi++) {
+            var b = btns[bi];
+            var target = b.getAttribute("data-lang-target");
+            if (target === lang) b.setAttribute("aria-current", "true");
+            else b.removeAttribute("aria-current");
+          }
         }
 
         function getLangFromUrl() {
