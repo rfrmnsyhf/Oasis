@@ -1,6 +1,21 @@
 ---
 import { restaurant } from "../data/restaurant";
+import { ui } from "../data/translations";
+import type { Lang } from "../utils/i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui(lang);
 const year = new Date().getFullYear();
+
+const navLinks = [
+  { href: `/menu${lang === "en" ? "?lang=en" : ""}`, label: t.nav.menu },
+  { href: `/?lang=${lang}#experience`, label: t.nav.experience },
+  { href: `/gallery${lang === "en" ? "?lang=en" : ""}`, label: t.nav.gallery },
+  { href: `/reviews${lang === "en" ? "?lang=en" : ""}`, label: t.nav.reviews },
+  { href: `/location${lang === "en" ? "?lang=en" : ""}`, label: t.nav.location },
+  { href: `/reserve${lang === "en" ? "?lang=en" : ""}`, label: t.nav.reserve },
+];
 ---
 
 <footer class="bg-charcoal text-ivory/80 mt-0">
@@ -9,7 +24,7 @@ const year = new Date().getFullYear();
       <div class="md:col-span-5">
         <div class="font-display text-5xl text-ivory leading-none">OASIS</div>
         <p class="mt-4 text-ivory/60 max-w-sm text-sm leading-relaxed">
-          Modern Dining<br/>in Tanjungpinang.
+          {t.footer.tagline}<br/>{t.footer.in}
         </p>
 
         <div class="mt-8 flex items-center gap-5 text-[12px] uppercase tracking-[0.18em]">
@@ -23,22 +38,19 @@ const year = new Date().getFullYear();
       </div>
 
       <div class="md:col-span-3">
-        <div class="text-[11px] uppercase tracking-[0.22em] text-ivory/40 mb-4">Explore</div>
+        <div class="text-[11px] uppercase tracking-[0.22em] text-ivory/40 mb-4">{t.footer.explore}</div>
         <ul class="space-y-2.5 text-sm">
-          <li><a href="/menu" class="hover:text-copper transition-colors">Menu</a></li>
-          <li><a href="/#experience" class="hover:text-copper transition-colors">Experience</a></li>
-          <li><a href="/gallery" class="hover:text-copper transition-colors">Gallery</a></li>
-          <li><a href="/reviews" class="hover:text-copper transition-colors">Reviews</a></li>
-          <li><a href="/location" class="hover:text-copper transition-colors">Location</a></li>
-          <li><a href="/reserve" class="hover:text-copper transition-colors">Reservation</a></li>
+          {navLinks.map((l) => (
+            <li><a href={l.href} class="hover:text-copper transition-colors">{l.label}</a></li>
+          ))}
         </ul>
       </div>
 
       <div class="md:col-span-4">
-        <div class="text-[11px] uppercase tracking-[0.22em] text-ivory/40 mb-4">Visit</div>
+        <div class="text-[11px] uppercase tracking-[0.22em] text-ivory/40 mb-4">{t.footer.visit}</div>
         <p class="text-sm leading-relaxed">
           {restaurant.address.line1}<br/>
-          {restaurant.address.line2}<br/>
+          {restaurant.address.line2[lang]}<br/>
           {restaurant.address.province}
         </p>
         <a
@@ -47,14 +59,14 @@ const year = new Date().getFullYear();
           rel="noopener"
           class="inline-flex items-center gap-2 mt-5 text-[12px] uppercase tracking-[0.2em] text-copper hover:text-ivory transition-colors"
         >
-          Get Directions →
+          {t.location.getDirections} →
         </a>
       </div>
     </div>
 
     <div class="mt-16 pt-8 border-t border-ivory/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-[11px] uppercase tracking-[0.2em] text-ivory/40">
-      <div>© {year} OASIS Restaurant</div>
-      <div>Tanjungpinang, Indonesia</div>
+      <div>{t.footer.copyright} {year} OASIS Restaurant</div>
+      <div>{t.footer.location}</div>
     </div>
   </div>
 </footer>

@@ -1,5 +1,11 @@
 ---
 import { restaurant } from "../data/restaurant";
+import { ui } from "../data/translations";
+import type { Lang } from "../utils/i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui(lang);
 ---
 
 <section class="bg-mist py-24 lg:py-36">
@@ -11,15 +17,15 @@ import { restaurant } from "../data/restaurant";
         rel="noopener"
         class="group relative overflow-hidden bg-charcoal text-ivory p-8 lg:p-12 min-h-[260px] flex flex-col justify-between"
       >
-        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">Instagram</div>
+        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">{t.social.instagram}</div>
         <div>
           <div class="font-display text-4xl lg:text-5xl leading-tight">{restaurant.social.instagramHandle}</div>
           <p class="text-ivory/70 mt-3 text-sm leading-relaxed max-w-sm">
-            Daily moments. Food. People. OASIS.
+            {t.social.instagramBody}
           </p>
         </div>
         <div class="text-[12px] uppercase tracking-[0.22em] text-ivory/80 group-hover:text-copper transition-colors">
-          Follow on Instagram →
+          {t.social.follow} →
         </div>
       </a>
 
@@ -29,15 +35,15 @@ import { restaurant } from "../data/restaurant";
         rel="noopener"
         class="group relative overflow-hidden bg-forest text-ivory p-8 lg:p-12 min-h-[260px] flex flex-col justify-between"
       >
-        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">TikTok</div>
+        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">{t.social.tiktok}</div>
         <div>
           <div class="font-display text-4xl lg:text-5xl leading-tight">{restaurant.social.tiktokHandle}</div>
           <p class="text-ivory/70 mt-3 text-sm leading-relaxed max-w-sm">
-            See OASIS in motion.
+            {t.social.tiktokBody}
           </p>
         </div>
         <div class="text-[12px] uppercase tracking-[0.22em] text-ivory/80 group-hover:text-copper transition-colors">
-          Watch on TikTok →
+          {t.social.watch} →
         </div>
       </a>
     </div>

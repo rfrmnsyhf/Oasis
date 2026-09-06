@@ -1,15 +1,22 @@
 ---
 import { restaurant } from "../data/restaurant";
-const mapsEmbed = "https://www.google.com/maps?q=" + encodeURIComponent(restaurant.address.line1 + ", " + restaurant.address.line2) + "&output=embed";
+import { ui } from "../data/translations";
+import type { Lang } from "../utils/i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui(lang);
+const mapsEmbed = "https://www.google.com/maps?q=" + encodeURIComponent(restaurant.address.line1 + ", " + restaurant.address.line2.en) + "&output=embed";
+const services = lang === "en" ? restaurant.services.en : restaurant.services.id;
 ---
 
 <section id="location" class="bg-ivory py-24 lg:py-36">
   <div class="max-w-7xl mx-auto px-6 lg:px-10">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-end reveal">
       <div class="lg:col-span-7">
-        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">Location</div>
+        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">{t.location.eyebrow}</div>
         <h2 class="font-display text-4xl sm:text-5xl lg:text-7xl leading-[0.98] mt-4">
-          Find OASIS.
+          {t.location.headline}
         </h2>
       </div>
       <div class="lg:col-span-5">
@@ -19,7 +26,7 @@ const mapsEmbed = "https://www.google.com/maps?q=" + encodeURIComponent(restaura
           rel="noopener"
           class="inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.22em] text-forest hover:text-copper transition-colors"
         >
-          Get directions →
+          {t.location.getDirections} →
         </a>
       </div>
     </div>
@@ -38,10 +45,10 @@ const mapsEmbed = "https://www.google.com/maps?q=" + encodeURIComponent(restaura
 
       <div class="lg:col-span-5 space-y-8 reveal" style="transition-delay: .12s">
         <div>
-          <div class="text-[10px] uppercase tracking-[0.28em] text-charcoal/40">Address</div>
+          <div class="text-[10px] uppercase tracking-[0.28em] text-charcoal/40">{t.location.address}</div>
           <p class="mt-2 text-lg leading-relaxed">
             {restaurant.address.line1}<br/>
-            {restaurant.address.line2}<br/>
+            {restaurant.address.line2[lang]}<br/>
             {restaurant.address.province}
           </p>
           <div class="mt-2 text-[11px] uppercase tracking-[0.22em] text-copper">
@@ -50,11 +57,11 @@ const mapsEmbed = "https://www.google.com/maps?q=" + encodeURIComponent(restaura
         </div>
 
         <div>
-          <div class="text-[10px] uppercase tracking-[0.28em] text-charcoal/40 mb-3">Hours</div>
+          <div class="text-[10px] uppercase tracking-[0.28em] text-charcoal/40 mb-3">{t.location.hours}</div>
           <ul class="space-y-1.5 text-sm">
             {restaurant.hours.map((h) => (
               <li class="flex items-baseline justify-between border-b border-charcoal/10 pb-1.5">
-                <span class="text-charcoal/80">{h.day}</span>
+                <span class="text-charcoal/80">{h.day[lang]}</span>
                 <span class="text-charcoal/60 tabular-nums">{h.open} – {h.close}</span>
               </li>
             ))}
@@ -62,9 +69,9 @@ const mapsEmbed = "https://www.google.com/maps?q=" + encodeURIComponent(restaura
         </div>
 
         <div>
-          <div class="text-[10px] uppercase tracking-[0.28em] text-charcoal/40 mb-3">Services</div>
+          <div class="text-[10px] uppercase tracking-[0.28em] text-charcoal/40 mb-3">{t.location.services}</div>
           <ul class="flex flex-wrap gap-2">
-            {restaurant.services.map((s) => (
+            {services.map((s) => (
               <li class="px-4 py-2 text-[12px] uppercase tracking-[0.22em] border border-charcoal/15 text-charcoal/80">
                 {s}
               </li>

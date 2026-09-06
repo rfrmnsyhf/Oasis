@@ -1,17 +1,22 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { gallery } from "../data/gallery";
+import { gallery, galleryAlt, galleryTagText } from "../data/gallery";
+import { ui } from "../data/translations";
+import { pickLang } from "../utils/i18n";
+
+const lang = pickLang(Astro.url.searchParams.get("lang"));
+const t = ui(lang);
 ---
 
 <Layout
-  title="Gallery | OASIS Restaurant Tanjungpinang"
-  description="Photos from OASIS Restaurant — interior, food, people, and the spaces in between."
+  title={lang === "en" ? "Gallery | OASIS Restaurant Tanjungpinang" : "Gallery | OASIS Restaurant Tanjungpinang"}
+  description={lang === "en" ? "Photos from OASIS Restaurant — interior, food, people, and the spaces in between." : "Foto dari OASIS Restaurant — interior, makanan, orang, dan ruangan di antaranya."}
 >
   <section class="bg-ivory pt-32 pb-12 lg:pt-40 lg:pb-16">
     <div class="max-w-7xl mx-auto px-6 lg:px-10">
-      <div class="text-[11px] uppercase tracking-[0.32em] text-copper">Gallery</div>
+      <div class="text-[11px] uppercase tracking-[0.32em] text-copper">{t.galleryPage.eyebrow}</div>
       <h1 class="font-display text-5xl lg:text-8xl leading-[0.95] mt-4">
-        OASIS through<br/>your eyes.
+        {t.galleryPage.title}
       </h1>
     </div>
   </section>
@@ -33,13 +38,13 @@ import { gallery } from "../data/gallery";
             >
               <img
                 src={g.src}
-                alt={g.alt}
+                alt={galleryAlt(g, lang)}
                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.06]"
                 loading="lazy"
               />
               <div class="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/30 transition-colors duration-500"></div>
               <div class="absolute left-3 bottom-3 text-[10px] uppercase tracking-[0.22em] text-ivory/0 group-hover:text-ivory transition-colors">
-                {g.tag}
+                {galleryTagText(g.tag, lang)}
               </div>
             </a>
           );

@@ -1,9 +1,16 @@
 ---
-import { menu } from "../data/menu";
+import { menu, itemName } from "../data/menu";
 import { formatShort } from "../utils/formatCurrency";
+import { ui } from "../data/translations";
+import type { Lang } from "../utils/i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui(lang);
 
 const items = menu.filter((i) => i.category === "cold-drinks");
 const lead = items[0];
+const menuHref = `/menu${lang === "en" ? "?lang=en" : ""}`;
 ---
 
 <section class="relative bg-forest text-ivory py-24 lg:py-36 overflow-hidden">
@@ -11,36 +18,36 @@ const lead = items[0];
   <div class="relative max-w-7xl mx-auto px-6 lg:px-10">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-end reveal">
       <div class="lg:col-span-7">
-        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">Cold Drinks</div>
+        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">{t.drinks.eyebrow}</div>
         <h2 class="font-display text-4xl sm:text-5xl lg:text-7xl leading-[0.98] mt-4">
-          Pour something<br/>
-          <em class="italic font-light">refreshing.</em>
+          {t.drinks.headline1}<br/>
+          <em class="italic font-light">{t.drinks.headlineEm}</em>
         </h2>
       </div>
       <div class="lg:col-span-5">
         <p class="text-ivory/70 text-base lg:text-lg leading-relaxed">
-          Citrus, herbs, house syrups — and a few non-alcoholic cocktails that feel grown-up.
+          {t.drinks.body}
         </p>
       </div>
     </div>
 
     <div class="mt-14 lg:mt-20 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 stagger">
       <a
-        href="/menu"
+        href={menuHref}
         class="group lg:col-span-7 relative overflow-hidden bg-charcoal"
       >
         <div class="aspect-[16/10]">
           <img
             src={lead.image}
-            alt={lead.name}
+            alt={itemName(lead, lang)}
             class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.04]"
             loading="lazy"
           />
         </div>
         <div class="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/20 to-transparent"></div>
         <div class="absolute left-7 right-7 bottom-7">
-          <div class="text-[10px] uppercase tracking-[0.32em] text-copper/90">Signature</div>
-          <div class="font-display text-4xl lg:text-5xl leading-tight mt-2">{lead.name}</div>
+          <div class="text-[10px] uppercase tracking-[0.32em] text-copper/90">{t.drinks.signature}</div>
+          <div class="font-display text-4xl lg:text-5xl leading-tight mt-2">{itemName(lead, lang)}</div>
           <div class="mt-2 text-[12px] uppercase tracking-[0.22em] text-ivory/80">Rp {formatShort(lead.price)}</div>
         </div>
       </a>
@@ -49,19 +56,19 @@ const lead = items[0];
         {items.slice(1).map((it) => (
           <li>
             <a
-              href="/menu"
+              href={menuHref}
               class="group flex items-center gap-4 p-3 border border-ivory/10 hover:border-copper/60 transition-colors"
             >
               <div class="size-16 shrink-0 overflow-hidden bg-charcoal/40">
                 <img
                   src={it.image}
-                  alt={it.name}
+                  alt={itemName(it, lang)}
                   class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
                   loading="lazy"
                 />
               </div>
               <div class="flex-1">
-                <div class="font-display text-xl leading-tight">{it.name}</div>
+                <div class="font-display text-xl leading-tight">{itemName(it, lang)}</div>
                 <div class="text-[11px] uppercase tracking-[0.22em] text-ivory/60 mt-1">Rp {formatShort(it.price)}</div>
               </div>
               <span class="text-copper opacity-0 group-hover:opacity-100 transition-opacity">→</span>

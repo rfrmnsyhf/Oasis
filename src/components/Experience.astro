@@ -1,19 +1,25 @@
 ---
-import { experienceMoments } from "../data/experience";
+import { experienceMoments, expText } from "../data/experience";
+import { ui } from "../data/translations";
+import type { Lang } from "../utils/i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui(lang);
 ---
 
 <section id="experience" class="relative bg-charcoal text-ivory overflow-hidden">
   <div class="max-w-7xl mx-auto px-6 lg:px-10 pt-24 lg:pt-32 pb-10">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end reveal">
       <div class="lg:col-span-7">
-        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">The OASIS Experience</div>
+        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">{t.experience.eyebrow}</div>
         <h2 class="font-display text-4xl sm:text-5xl lg:text-7xl leading-[0.98] mt-5">
-          Three things, done with care.
+          {t.experience.headline}
         </h2>
       </div>
       <div class="lg:col-span-5">
         <p class="text-ivory/65 text-base leading-relaxed">
-          Scroll through what makes OASIS a place to come back to — not just a place to eat.
+          {t.experience.body}
         </p>
       </div>
     </div>
@@ -24,49 +30,52 @@ import { experienceMoments } from "../data/experience";
     class="relative h-[100vh] lg:h-[80vh] overflow-hidden"
   >
     <div id="xp-track" class="flex h-full w-[300%] lg:w-[200%]">
-      {experienceMoments.map((m) => (
-        <article class="xp-slide relative h-full w-screen lg:w-[50vw] flex items-center">
-          <div class="absolute inset-0">
-            <img
-              src={m.image}
-              alt={m.title}
-              class="w-full h-full object-cover opacity-70"
-              loading="lazy"
-              decoding="async"
-            />
-            <div class="absolute inset-0 cinematic-overlay"></div>
-          </div>
-          <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 w-full">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
-              <div class="lg:col-span-8">
-                <div class="text-[11px] uppercase tracking-[0.32em] text-copper">{m.index}</div>
-                <h3 class="font-display text-6xl lg:text-9xl tracking-tight leading-[0.92] mt-4">
-                  {m.title}
-                </h3>
-                <p class="mt-6 max-w-lg text-ivory/75 text-base lg:text-lg leading-relaxed">
-                  {m.body}
-                </p>
+      {experienceMoments.map((m) => {
+        const txt = expText(m, lang);
+        return (
+          <article class="xp-slide relative h-full w-screen lg:w-[50vw] flex items-center">
+            <div class="absolute inset-0">
+              <img
+                src={m.image}
+                alt={txt.title}
+                class="w-full h-full object-cover opacity-70"
+                loading="lazy"
+                decoding="async"
+              />
+              <div class="absolute inset-0 cinematic-overlay"></div>
+            </div>
+            <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 w-full">
+              <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+                <div class="lg:col-span-8">
+                  <div class="text-[11px] uppercase tracking-[0.32em] text-copper">{m.index}</div>
+                  <h3 class="font-display text-6xl lg:text-9xl tracking-tight leading-[0.92] mt-4">
+                    {txt.title}
+                  </h3>
+                  <p class="mt-6 max-w-lg text-ivory/75 text-base lg:text-lg leading-relaxed">
+                    {txt.body}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        </article>
-      ))}
+          </article>
+        );
+      })}
     </div>
   </div>
 
   <div class="max-w-7xl mx-auto px-6 lg:px-10 py-12 lg:py-16">
     <div class="flex items-center justify-between text-[11px] uppercase tracking-[0.32em] text-ivory/50">
       <div>01 — 02 — 03</div>
-      <div class="hidden md:block">Drag, scroll, or use arrow keys</div>
+      <div class="hidden md:block">{t.experience.nav}</div>
       <div class="flex items-center gap-2">
         <button
           id="xp-prev"
-          aria-label="Previous"
+          aria-label={t.experience.prev}
           class="size-10 border border-ivory/30 hover:border-ivory hover:bg-ivory hover:text-charcoal transition-colors flex items-center justify-center"
         >←</button>
         <button
           id="xp-next"
-          aria-label="Next"
+          aria-label={t.experience.next}
           class="size-10 border border-ivory/30 hover:border-ivory hover:bg-ivory hover:text-charcoal transition-colors flex items-center justify-center"
         >→</button>
       </div>
@@ -89,7 +98,7 @@ import { experienceMoments } from "../data/experience";
     const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
     const xPercent = isDesktop ? -(50 * (total - 1)) : -(100 * (total - 1));
 
-    const tween = gsap.to(track, {
+    gsap.to(track, {
       xPercent,
       ease: "none",
       scrollTrigger: {

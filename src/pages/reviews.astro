@@ -1,17 +1,22 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { restaurant } from "../data/restaurant";
-import { featuredReviews } from "../data/reviews";
+import { featuredReviews, reviewText } from "../data/reviews";
+import { ui } from "../data/translations";
+import { pickLang } from "../utils/i18n";
+
+const lang = pickLang(Astro.url.searchParams.get("lang"));
+const t = ui(lang);
 ---
 
 <Layout
-  title="Reviews | OASIS Restaurant Tanjungpinang"
-  description="What guests say about OASIS Restaurant in Tanjungpinang."
+  title={lang === "en" ? "Reviews | OASIS Restaurant Tanjungpinang" : "Ulasan | OASIS Restaurant Tanjungpinang"}
+  description={lang === "en" ? "What guests say about OASIS Restaurant in Tanjungpinang." : "Apa kata tamu tentang OASIS Restaurant di Tanjungpinang."}
 >
   <section class="bg-ivory pt-32 pb-12 lg:pt-40 lg:pb-16">
     <div class="max-w-7xl mx-auto px-6 lg:px-10">
-      <div class="text-[11px] uppercase tracking-[0.32em] text-copper">Reviews</div>
-      <h1 class="font-display text-5xl lg:text-8xl leading-[0.95] mt-4">What people say.</h1>
+      <div class="text-[11px] uppercase tracking-[0.32em] text-copper">{t.reviewsPage.eyebrow}</div>
+      <h1 class="font-display text-5xl lg:text-8xl leading-[0.95] mt-4">{t.reviewsPage.title}</h1>
     </div>
   </section>
 
@@ -21,7 +26,7 @@ import { featuredReviews } from "../data/reviews";
         <div class="font-display text-7xl lg:text-9xl text-forest leading-none">{restaurant.rating}</div>
         <div>
           <div class="text-copper text-3xl">★★★★★</div>
-          <div class="text-charcoal/60 text-sm mt-1">Based on {restaurant.reviewCount} {restaurant.ratingSource}</div>
+          <div class="text-charcoal/60 text-sm mt-1">{t.reviews.basedOn} {restaurant.reviewCount} {t.reviews.source}</div>
         </div>
       </div>
     </div>
@@ -29,16 +34,19 @@ import { featuredReviews } from "../data/reviews";
 
   <section class="bg-ivory pb-24 lg:pb-36">
     <div class="max-w-4xl mx-auto px-6 lg:px-10 space-y-12">
-      {featuredReviews.map((r, i) => (
-        <article class="reveal" style={`transition-delay: ${i * 60}ms`}>
-          <p class="font-display italic text-3xl lg:text-4xl leading-snug">
-            "{r.quote}"
-          </p>
-          <div class="mt-4 text-[11px] uppercase tracking-[0.22em] text-charcoal/40">
-            — {r.author} · {r.source}
-          </div>
-        </article>
-      ))}
+      {featuredReviews.map((r, i) => {
+        const txt = reviewText(r, lang);
+        return (
+          <article class="reveal" style={`transition-delay: ${i * 60}ms`}>
+            <p class="font-display italic text-3xl lg:text-4xl leading-snug">
+              "{txt.quote}"
+            </p>
+            <div class="mt-4 text-[11px] uppercase tracking-[0.22em] text-charcoal/40">
+              — {txt.author} · {txt.source}
+            </div>
+          </article>
+        );
+      })}
     </div>
   </section>
 </Layout>

@@ -1,16 +1,21 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { ui } from "../data/translations";
+import { pickLang } from "../utils/i18n";
+
+const lang = pickLang(Astro.url.searchParams.get("lang"));
+const t = ui(lang);
 ---
 
-<Layout title="Not found | OASIS Restaurant">
+<Layout title={`${t.notFound.title} | OASIS Restaurant`}>
   <section class="min-h-[70vh] flex items-center bg-ivory">
     <div class="max-w-3xl mx-auto px-6 lg:px-10 py-24 text-center">
-      <div class="text-[11px] uppercase tracking-[0.32em] text-copper">404</div>
-      <h1 class="font-display text-5xl lg:text-7xl mt-4">A wrong turn.</h1>
-      <p class="mt-6 text-charcoal/70">Let's get you back to the menu, or to the front door.</p>
+      <div class="text-[11px] uppercase tracking-[0.32em] text-copper">{t.notFound.eyebrow}</div>
+      <h1 class="font-display text-5xl lg:text-7xl mt-4">{t.notFound.title}</h1>
+      <p class="mt-6 text-charcoal/70">{t.notFound.body}</p>
       <div class="mt-10 flex items-center justify-center gap-3">
-        <a href="/" class="px-6 py-3 bg-forest text-ivory text-[12px] uppercase tracking-[0.22em] hover:bg-copper transition-colors">Back home</a>
-        <a href="/menu" class="px-6 py-3 border border-forest text-forest text-[12px] uppercase tracking-[0.22em] hover:bg-forest hover:text-ivory transition-colors">View menu</a>
+        <a href={`/?lang=${lang}`} class="px-6 py-3 bg-forest text-ivory text-[12px] uppercase tracking-[0.22em] hover:bg-copper transition-colors">{t.notFound.backHome}</a>
+        <a href={`/menu${lang === "en" ? "?lang=en" : ""}`} class="px-6 py-3 border border-forest text-forest text-[12px] uppercase tracking-[0.22em] hover:bg-forest hover:text-ivory transition-colors">{t.notFound.viewMenu}</a>
       </div>
     </div>
   </section>

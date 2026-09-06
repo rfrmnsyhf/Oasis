@@ -1,10 +1,26 @@
 ---
+import { ui } from "../data/translations";
+import type { Lang } from "../utils/i18n";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui(lang);
+const otherLang: Lang = lang === "en" ? "id" : "en";
+const path = Astro.url.pathname;
+const switchHref = `${path}${path.includes("?") ? "&" : "?"}lang=${otherLang}`;
+
 const links = [
-  { href: "/menu", label: "Menu" },
-  { href: "/#experience", label: "Experience" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/reviews", label: "Reviews" },
-  { href: "/location", label: "Location" },
+  { href: `?lang=${lang}`.includes("?") ? `${path}?lang=${lang}#menu` : `?lang=${lang}`, label: t.nav.menu, plain: "/menu" },
+];
+const navItems = [
+  { href: "/menu", label: t.nav.menu },
+  { href: `/?lang=${lang}#experience`, label: t.nav.experience },
+  { href: "/gallery", label: t.nav.gallery },
+  { href: "/reviews", label: t.nav.reviews },
+  { href: "/location", label: t.nav.location },
 ];
 ---
 
@@ -13,13 +29,13 @@ const links = [
   class="fixed top-0 inset-x-0 z-40 transition-all duration-500"
   data-state="top"
 >
-  <nav class="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-10 py-5 lg:py-6">
-    <a href="/" class="font-display text-2xl lg:text-3xl tracking-tight text-ivory data-[on=top]:text-ivory data-[on=scrolled]:text-forest transition-colors duration-500" data-navmark>
+  <nav class="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-10 py-5 lg:py-6 gap-4">
+    <a href={`/?lang=${lang}`} class="font-display text-2xl lg:text-3xl tracking-tight text-ivory data-[on=top]:text-ivory data-[on=scrolled]:text-forest transition-colors duration-500" data-navmark>
       OASIS
     </a>
 
-    <ul class="hidden md:flex items-center gap-9 text-[13px] uppercase tracking-[0.18em] text-ivory/85 data-[on=scrolled]:text-forest/80 transition-colors duration-500" data-navlinks>
-      {links.map((l) => (
+    <ul class="hidden md:flex items-center gap-7 lg:gap-9 text-[12px] uppercase tracking-[0.18em] text-ivory/85 data-[on=scrolled]:text-forest/80 transition-colors duration-500" data-navlinks>
+      {navItems.map((l) => (
         <li>
           <a
             href={l.href}
@@ -30,18 +46,32 @@ const links = [
       ))}
     </ul>
 
-    <a
-      href="/reserve"
-      class="hidden md:inline-flex items-center gap-2 px-5 py-2.5 text-[12px] uppercase tracking-[0.2em] border border-ivory/40 text-ivory hover:bg-ivory hover:text-forest transition-all duration-300 data-[on=scrolled]:border-forest data-[on=scrolled]:text-forest data-[on=scrolled]:hover:bg-forest data-[on=scrolled]:hover:text-ivory"
-      data-navcta
-    >
-      Reserve
-    </a>
+    <div class="hidden md:flex items-center gap-3">
+      <div class="flex items-center text-[11px] uppercase tracking-[0.2em] border border-ivory/30 data-[on=scrolled]:border-forest/30" data-langtoggle>
+        <a
+          href={`${path}${path.includes("?") ? "&" : "?"}lang=id`}
+          class:list={["px-3 py-1.5 transition-colors", lang === "id" ? "bg-ivory text-forest" : "text-ivory/70 hover:text-ivory data-[on=scrolled]:text-forest/70 data-[on=scrolled]:hover:text-forest"]}
+          data-langbtn
+        >ID</a>
+        <a
+          href={`${path}${path.includes("?") ? "&" : "?"}lang=en`}
+          class:list={["px-3 py-1.5 transition-colors", lang === "en" ? "bg-ivory text-forest" : "text-ivory/70 hover:text-ivory data-[on=scrolled]:text-forest/70 data-[on=scrolled]:hover:text-forest"]}
+          data-langbtn
+        >EN</a>
+      </div>
+      <a
+        href={`/reserve${lang === "en" ? "?lang=en" : ""}`}
+        class="inline-flex items-center gap-2 px-5 py-2.5 text-[12px] uppercase tracking-[0.2em] border border-ivory/40 text-ivory hover:bg-ivory hover:text-forest transition-all duration-300 data-[on=scrolled]:border-forest data-[on=scrolled]:text-forest data-[on=scrolled]:hover:bg-forest data-[on=scrolled]:hover:text-ivory"
+        data-navcta
+      >
+        {t.nav.reserve}
+      </a>
+    </div>
 
     <button
       id="nav-toggle"
       class="md:hidden text-ivory data-[on=scrolled]:text-forest transition-colors"
-      aria-label="Open menu"
+      aria-label={t.nav.homeAria}
       aria-expanded="false"
     >
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -55,14 +85,20 @@ const links = [
     id="nav-mobile"
     class="md:hidden hidden bg-ivory/95 backdrop-blur-lg border-t border-charcoal/10"
   >
-    <ul class="flex flex-col py-6 px-6 gap-5 text-sm uppercase tracking-[0.18em] text-forest">
-      {links.map((l) => (
+    <ul class="flex flex-col py-6 px-6 gap-4 text-sm uppercase tracking-[0.18em] text-forest">
+      {navItems.map((l) => (
         <li><a href={l.href} class="block py-1">{l.label}</a></li>
       ))}
       <li>
-        <a href="/reserve" class="inline-block mt-2 px-5 py-2.5 border border-forest text-forest uppercase tracking-[0.2em] text-[12px]">
-          Reserve
+        <a href={`/reserve${lang === "en" ? "?lang=en" : ""}`} class="inline-block mt-2 px-5 py-2.5 border border-forest text-forest uppercase tracking-[0.2em] text-[12px]">
+          {t.nav.reserve}
         </a>
+      </li>
+      <li>
+        <div class="flex items-center text-[11px] uppercase tracking-[0.2em] border border-charcoal/20 w-fit">
+          <a href={`${path}${path.includes("?") ? "&" : "?"}lang=id`} class:list={["px-3 py-1.5", lang === "id" ? "bg-forest text-ivory" : "text-forest"]}>ID</a>
+          <a href={`${path}${path.includes("?") ? "&" : "?"}lang=en`} class:list={["px-3 py-1.5", lang === "en" ? "bg-forest text-ivory" : "text-forest"]}>EN</a>
+        </div>
       </li>
     </ul>
   </div>
@@ -85,6 +121,8 @@ const links = [
       });
       nav.querySelectorAll<HTMLElement>("[data-navlinks]").forEach((el) => el.dataset.on = state);
       nav.querySelectorAll<HTMLElement>("[data-navcta]").forEach((el) => el.dataset.on = state);
+      nav.querySelectorAll<HTMLElement>("[data-langtoggle]").forEach((el) => el.dataset.on = state);
+      nav.querySelectorAll<HTMLElement>("[data-langbtn]").forEach((el) => el.dataset.on = state);
       nav.querySelectorAll<HTMLElement>("#nav-toggle").forEach((el) => el.dataset.on = state);
       if (state === "scrolled") {
         nav.classList.add("glass");

@@ -1,9 +1,15 @@
 ---
+import { ui } from "../../data/translations";
+import type { Lang } from "../../utils/i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui(lang);
 const items = [
-  { href: "/", label: "Home", icon: "home" },
-  { href: "/menu", label: "Menu", icon: "menu" },
-  { href: "/gallery", label: "Gallery", icon: "gallery" },
-  { href: "/reserve", label: "Reserve", icon: "reserve", primary: true },
+  { href: `/?lang=${lang}`, label: t.bottomNav.home, icon: "home" },
+  { href: `/menu${lang === "en" ? "?lang=en" : ""}`, label: t.bottomNav.menu, icon: "menu" },
+  { href: `/gallery${lang === "en" ? "?lang=en" : ""}`, label: t.bottomNav.gallery, icon: "gallery" },
+  { href: `/reserve${lang === "en" ? "?lang=en" : ""}`, label: t.bottomNav.reserve, icon: "reserve", primary: true },
 ];
 ---
 

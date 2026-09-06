@@ -14,21 +14,24 @@ import Reviews from "../components/Reviews.astro";
 import Events from "../components/Events.astro";
 import Reserve from "../components/Reserve.astro";
 import Location from "../components/Location.astro";
+import { pickLang } from "../utils/i18n";
+
+const lang = pickLang(Astro.url.searchParams.get("lang"));
 ---
 
 <Layout>
-  <Hero />
-  <Intro />
-  <Experience />
-  <MenuPreview />
-  <Breakfast />
-  <Dessert />
-  <Drinks />
-  <HotTea />
-  <Gallery />
-  <Social />
-  <Reviews />
-  <Events />
-  <Reserve />
-  <Location />
+  <Hero lang={lang} />
+  <Intro lang={lang} />
+  <Experience lang={lang} />
+  <MenuPreview lang={lang} />
+  <Breakfast lang={lang} />
+  <Dessert lang={lang} />
+  <Drinks lang={lang} />
+  <HotTea lang={lang} />
+  <Gallery lang={lang} />
+  <Social lang={lang} />
+  <Reviews lang={lang} />
+  <Events lang={lang} />
+  <Reserve lang={lang} />
+  <Location lang={lang} />
 </Layout>

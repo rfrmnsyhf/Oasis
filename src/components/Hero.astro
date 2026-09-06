@@ -1,5 +1,14 @@
 ---
 import { restaurant } from "../data/restaurant";
+import { ui } from "../data/translations";
+import type { Lang } from "../utils/i18n";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui(lang);
 ---
 
 <section class="relative min-h-screen w-full overflow-hidden bg-charcoal text-ivory grain">
@@ -18,31 +27,31 @@ import { restaurant } from "../data/restaurant";
   <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 pt-36 lg:pt-44 pb-24 lg:pb-32 min-h-screen flex flex-col justify-end">
     <div class="max-w-3xl hero-text">
       <div class="text-[11px] uppercase tracking-[0.32em] text-ivory/70 hero-fade" style="transition-delay: .1s">
-        {restaurant.tagline}
+        {t.hero.tagline}
       </div>
 
       <h1 class="font-display text-5xl sm:text-6xl lg:text-8xl leading-[0.95] tracking-tight mt-6 hero-fade" style="transition-delay: .25s">
-        A place to eat,<br/>
-        gather <em class="italic font-light text-copper">and stay</em> awhile.
+        {t.hero.headline1}<br/>
+        {t.hero.headline2} <em class="italic font-light text-copper">{t.hero.headlineEm}</em>
       </h1>
 
       <p class="mt-6 max-w-xl text-ivory/75 text-base lg:text-lg leading-relaxed hero-fade" style="transition-delay: .4s">
-        {restaurant.description}
+        {t.hero.body}
       </p>
 
       <div class="mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 hero-fade" style="transition-delay: .55s">
         <a
-          href="/menu"
+          href={`/menu${lang === "en" ? "?lang=en" : ""}`}
           class="inline-flex items-center justify-center gap-3 px-7 py-4 bg-ivory text-forest text-[13px] uppercase tracking-[0.22em] hover:bg-copper hover:text-ivory transition-colors duration-300"
         >
-          Explore Menu
+          {t.hero.cta1}
           <span aria-hidden="true">→</span>
         </a>
         <a
-          href="/reserve"
+          href={`/reserve${lang === "en" ? "?lang=en" : ""}`}
           class="inline-flex items-center justify-center gap-3 px-7 py-4 border border-ivory/60 text-ivory text-[13px] uppercase tracking-[0.22em] hover:bg-ivory/10 transition-colors duration-300"
         >
-          Reserve a Table
+          {t.hero.cta2}
         </a>
       </div>
 
@@ -56,7 +65,7 @@ import { restaurant } from "../data/restaurant";
         </div>
         <span class="font-medium text-ivory">{restaurant.rating} / 5</span>
         <span class="text-ivory/40">·</span>
-        <span>{restaurant.reviewCount} Google Reviews</span>
+        <span>{restaurant.reviewCount} {t.hero.rating}</span>
       </div>
     </div>
   </div>
@@ -65,7 +74,7 @@ import { restaurant } from "../data/restaurant";
     href="#intro"
     class="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 text-ivory/60 hover:text-ivory transition-colors items-center gap-3 text-[11px] uppercase tracking-[0.32em]"
   >
-    <span>Scroll</span>
+    <span>{t.hero.scroll}</span>
     <span class="block w-px h-10 bg-ivory/40 hero-line"></span>
   </a>
 </section>
@@ -84,15 +93,9 @@ import { restaurant } from "../data/restaurant";
     animation: heroLine 1.6s 0.4s cubic-bezier(0.2, 0.7, 0.1, 1) forwards;
     transform: scaleY(0);
   }
-  @keyframes heroIn {
-    to { opacity: 1; transform: none; }
-  }
-  @keyframes heroZoom {
-    to { transform: scale(1); }
-  }
-  @keyframes heroLine {
-    to { transform: scaleY(1); }
-  }
+  @keyframes heroIn { to { opacity: 1; transform: none; } }
+  @keyframes heroZoom { to { transform: scale(1); } }
+  @keyframes heroLine { to { transform: scaleY(1); } }
   @media (prefers-reduced-motion: reduce) {
     .hero-fade, .hero-bg, .hero-line {
       animation: none !important;

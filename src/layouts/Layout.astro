@@ -4,6 +4,8 @@ import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 import BottomNav from "../components/mobile/BottomNav.astro";
 import { restaurant } from "../data/restaurant";
+import { pickLang, type Lang } from "../utils/i18n";
+import { ui } from "../data/translations";
 
 export interface Props {
   title?: string;
@@ -19,13 +21,22 @@ const {
   noFooter = false,
 } = Astro.props;
 
+const lang: Lang = pickLang(Astro.url.searchParams.get("lang"));
+const t = ui(lang);
+
 const canonical = new URL(Astro.url.pathname, Astro.site ?? "https://oasis-tanjungpinang.com").toString();
+const ogTitle = lang === "en"
+  ? title
+  : "OASIS Restaurant Tanjungpinang | Modern Dining & Pengalaman Bersantap";
+const ogDescription = lang === "en"
+  ? description
+  : "Temukan OASIS Restaurant di Tanjungpinang. Modern dining, hidangan Asia, minuman segar, dan ruang aesthetic untuk makan, berkumpul, dan selebrasi.";
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Restaurant",
   name: restaurant.name,
-  description: restaurant.description,
+  description: restaurant.longDescription.en,
   address: {
     "@type": "PostalAddress",
     streetAddress: restaurant.address.line1,
@@ -41,13 +52,13 @@ const jsonLd = {
   },
   servesCuisine: ["Asian", "Indonesian", "Western"],
   priceRange: "Rp25K–Rp100K",
-  openingHours: restaurant.hours.map((h) => `${h.day.slice(0, 2)} ${h.open}-${h.close}`),
+  openingHours: restaurant.hours.map((h) => `${h.day.en.slice(0, 2)} ${h.open}-${h.close}`),
   sameAs: [restaurant.social.instagramUrl, restaurant.social.tiktokUrl].filter(Boolean),
 };
 ---
 
 <!doctype html>
-<html lang="id">
+<html lang={lang === "en" ? "en" : "id"} data-lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -58,17 +69,20 @@ const jsonLd = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
 
+    <link rel="alternate" hreflang="id" href={new URL(Astro.url.pathname + "?lang=id", Astro.site ?? "https://oasis-tanjungpinang.com").toString()} />
+    <link rel="alternate" hreflang="en" href={new URL(Astro.url.pathname + "?lang=en", Astro.site ?? "https://oasis-tanjungpinang.com").toString()} />
+
     <meta property="og:type" content="restaurant" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={ogDescription} />
     <meta property="og:image" content={new URL(image, Astro.site ?? "https://oasis-tanjungpinang.com").toString()} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:locale" content="id_ID" />
+    <meta property="og:locale" content={lang === "en" ? "en_US" : "id_ID"} />
     <meta property="og:site_name" content="OASIS Restaurant" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:title" content={ogTitle} />
+    <meta name="twitter:description" content={ogDescription} />
     <meta name="twitter:image" content={new URL(image, Astro.site ?? "https://oasis-tanjungpinang.com").toString()} />
 
     <meta name="keywords" content="OASIS Restaurant Tanjungpinang, restoran aesthetic Tanjungpinang, restaurant Tanjungpinang, tempat makan Tanjungpinang, restoran Batu IX, tempat nongkrong Tanjungpinang" />
@@ -84,20 +98,20 @@ const jsonLd = {
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
-  <body class="bg-ivory text-charcoal antialiased">
+  <body class="bg-ivory text-charcoal antialiased" data-lang={lang}>
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:bg-forest focus:text-ivory focus:px-4 focus:py-2 focus:rounded"
     >
-      Skip to content
+      {t.skipToContent}
     </a>
 
-    <Navbar />
+    <Navbar lang={lang} />
     <main id="main">
       <slot />
     </main>
-    {!noFooter && <Footer />}
-    <BottomNav />
+    {!noFooter && <Footer lang={lang} />}
+    <BottomNav lang={lang} />
 
     <script>
       const io = new IntersectionObserver(
