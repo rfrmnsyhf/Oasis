@@ -14,8 +14,8 @@ const services = lang === "en" ? restaurant.services.en : restaurant.services.id
   <div class="max-w-7xl mx-auto px-6 lg:px-10">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-end reveal">
       <div class="lg:col-span-7">
-        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">{t.location.eyebrow}</div>
-        <h2 class="font-display text-4xl sm:text-5xl lg:text-7xl leading-[0.98] mt-4">
+        <div class="text-[11px] uppercase tracking-[0.32em] text-copper" data-i18n="location.eyebrow">{t.location.eyebrow}</div>
+        <h2 class="font-display text-4xl sm:text-5xl lg:text-7xl leading-[0.98] mt-4" data-i18n="location.headline">
           {t.location.headline}
         </h2>
       </div>
@@ -24,6 +24,7 @@ const services = lang === "en" ? restaurant.services.en : restaurant.services.id
           href={restaurant.social.googleMapsUrl}
           target="_blank"
           rel="noopener"
+          data-i18n="location.getDirections"
           class="inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.22em] text-forest hover:text-copper transition-colors"
         >
           {t.location.getDirections} →
@@ -45,10 +46,10 @@ const services = lang === "en" ? restaurant.services.en : restaurant.services.id
 
       <div class="lg:col-span-5 space-y-8 reveal" style="transition-delay: .12s">
         <div>
-          <div class="text-[10px] uppercase tracking-[0.28em] text-charcoal/40">{t.location.address}</div>
+          <div class="text-[10px] uppercase tracking-[0.28em] text-charcoal/40" data-i18n="location.address">{t.location.address}</div>
           <p class="mt-2 text-lg leading-relaxed">
             {restaurant.address.line1}<br/>
-            {restaurant.address.line2[lang]}<br/>
+            <span data-i18n-addrline2>{restaurant.address.line2[lang]}</span><br/>
             {restaurant.address.province}
           </p>
           <div class="mt-2 text-[11px] uppercase tracking-[0.22em] text-copper">
@@ -57,11 +58,11 @@ const services = lang === "en" ? restaurant.services.en : restaurant.services.id
         </div>
 
         <div>
-          <div class="text-[10px] uppercase tracking-[0.28em] text-charcoal/40 mb-3">{t.location.hours}</div>
+          <div class="text-[10px] uppercase tracking-[0.28em] text-charcoal/40 mb-3" data-i18n="location.hours">{t.location.hours}</div>
           <ul class="space-y-1.5 text-sm">
             {restaurant.hours.map((h) => (
               <li class="flex items-baseline justify-between border-b border-charcoal/10 pb-1.5">
-                <span class="text-charcoal/80">{h.day[lang]}</span>
+                <span class="text-charcoal/80" data-i18n-day={h.day.id}>{h.day[lang]}</span>
                 <span class="text-charcoal/60 tabular-nums">{h.open} – {h.close}</span>
               </li>
             ))}
@@ -69,10 +70,10 @@ const services = lang === "en" ? restaurant.services.en : restaurant.services.id
         </div>
 
         <div>
-          <div class="text-[10px] uppercase tracking-[0.28em] text-charcoal/40 mb-3">{t.location.services}</div>
+          <div class="text-[10px] uppercase tracking-[0.28em] text-charcoal/40 mb-3" data-i18n="location.services">{t.location.services}</div>
           <ul class="flex flex-wrap gap-2">
-            {services.map((s) => (
-              <li class="px-4 py-2 text-[12px] uppercase tracking-[0.22em] border border-charcoal/15 text-charcoal/80">
+            {services.map((s, i) => (
+              <li data-i18n-service={i} class="px-4 py-2 text-[12px] uppercase tracking-[0.22em] border border-charcoal/15 text-charcoal/80">
                 {s}
               </li>
             ))}

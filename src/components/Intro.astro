@@ -13,30 +13,30 @@ const longDesc = lang === "en" ? restaurant.longDescription.en : restaurant.long
   <div class="max-w-7xl mx-auto px-6 lg:px-10">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-end">
       <div class="lg:col-span-7 reveal">
-        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">{t.intro.eyebrow}</div>
+        <div class="text-[11px] uppercase tracking-[0.32em] text-copper" data-i18n="intro.eyebrow">{t.intro.eyebrow}</div>
         <h2 class="font-display text-4xl sm:text-5xl lg:text-7xl leading-[0.98] mt-5 text-charcoal">
-          {t.intro.headline1}<br/>
-          {t.intro.headlineEm.split(" ").slice(0, -1).join(" ")} <em class="italic font-light">{t.intro.headlineEm.split(" ").slice(-1)[0]}</em>
+          <span data-i18n="intro.headline1">{t.intro.headline1}</span><br/>
+          {t.intro.headlineEm.split(" ").slice(0, -1).join(" ")} <em data-i18n="intro.headlineEm" class="italic font-light">{t.intro.headlineEm.split(" ").slice(-1)[0]}</em>
         </h2>
       </div>
       <div class="lg:col-span-5 reveal" style="transition-delay: .15s">
-        <p class="text-charcoal/70 text-base lg:text-lg leading-relaxed">
+        <p class="text-charcoal/70 text-base lg:text-lg leading-relaxed" data-i18n-longdesc="longDescription" data-en={restaurant.longDescription.en} data-id={restaurant.longDescription.id}>
           {longDesc}
         </p>
         <div class="mt-8 flex items-center gap-6 text-[12px] uppercase tracking-[0.22em]">
           <div>
-            <div class="text-charcoal/40">{t.intro.since}</div>
-            <div class="text-forest font-medium">{t.intro.sinceVal}</div>
+            <div class="text-charcoal/40" data-i18n="intro.since">{t.intro.since}</div>
+            <div class="text-forest font-medium" data-i18n="intro.sinceVal">{t.intro.sinceVal}</div>
           </div>
           <div class="w-px h-8 bg-charcoal/15"></div>
           <div>
-            <div class="text-charcoal/40">{t.intro.located}</div>
-            <div class="text-forest font-medium">{t.intro.locatedVal}</div>
+            <div class="text-charcoal/40" data-i18n="intro.located">{t.intro.located}</div>
+            <div class="text-forest font-medium" data-i18n="intro.locatedVal">{t.intro.locatedVal}</div>
           </div>
           <div class="w-px h-8 bg-charcoal/15"></div>
           <div>
-            <div class="text-charcoal/40">{t.intro.style}</div>
-            <div class="text-forest font-medium">{t.intro.styleVal}</div>
+            <div class="text-charcoal/40" data-i18n="intro.style">{t.intro.style}</div>
+            <div class="text-forest font-medium" data-i18n="intro.styleVal">{t.intro.styleVal}</div>
           </div>
         </div>
       </div>

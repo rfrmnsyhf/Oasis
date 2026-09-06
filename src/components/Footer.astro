@@ -7,14 +7,15 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = ui(lang);
 const year = new Date().getFullYear();
+const q = lang === "en" ? "?lang=en" : "";
 
 const navLinks = [
-  { href: `/menu${lang === "en" ? "?lang=en" : ""}`, label: t.nav.menu },
-  { href: `/?lang=${lang}#experience`, label: t.nav.experience },
-  { href: `/gallery${lang === "en" ? "?lang=en" : ""}`, label: t.nav.gallery },
-  { href: `/reviews${lang === "en" ? "?lang=en" : ""}`, label: t.nav.reviews },
-  { href: `/location${lang === "en" ? "?lang=en" : ""}`, label: t.nav.location },
-  { href: `/reserve${lang === "en" ? "?lang=en" : ""}`, label: t.nav.reserve },
+  { href: `/menu${q}`, label: t.nav.menu },
+  { href: `/${q}#experience`, label: t.nav.experience },
+  { href: `/gallery${q}`, label: t.nav.gallery },
+  { href: `/reviews${q}`, label: t.nav.reviews },
+  { href: `/location${q}`, label: t.nav.location },
+  { href: `/reserve${q}`, label: t.nav.reserve },
 ];
 ---
 
@@ -24,7 +25,7 @@ const navLinks = [
       <div class="md:col-span-5">
         <div class="font-display text-5xl text-ivory leading-none">OASIS</div>
         <p class="mt-4 text-ivory/60 max-w-sm text-sm leading-relaxed">
-          {t.footer.tagline}<br/>{t.footer.in}
+          <span data-i18n="footer.tagline">{t.footer.tagline}</span><br/><span data-i18n="footer.in">{t.footer.in}</span>
         </p>
 
         <div class="mt-8 flex items-center gap-5 text-[12px] uppercase tracking-[0.18em]">
@@ -38,25 +39,32 @@ const navLinks = [
       </div>
 
       <div class="md:col-span-3">
-        <div class="text-[11px] uppercase tracking-[0.22em] text-ivory/40 mb-4">{t.footer.explore}</div>
+        <div class="text-[11px] uppercase tracking-[0.22em] text-ivory/40 mb-4" data-i18n="footer.explore">{t.footer.explore}</div>
         <ul class="space-y-2.5 text-sm">
-          {navLinks.map((l) => (
-            <li><a href={l.href} class="hover:text-copper transition-colors">{l.label}</a></li>
+          {navLinks.map((l, i) => (
+            <li>
+              <a
+                href={l.href}
+                data-i18n={["nav.menu", "nav.experience", "nav.gallery", "nav.reviews", "nav.location", "nav.reserve"][i]}
+                class="hover:text-copper transition-colors"
+              >{l.label}</a>
+            </li>
           ))}
         </ul>
       </div>
 
       <div class="md:col-span-4">
-        <div class="text-[11px] uppercase tracking-[0.22em] text-ivory/40 mb-4">{t.footer.visit}</div>
+        <div class="text-[11px] uppercase tracking-[0.22em] text-ivory/40 mb-4" data-i18n="footer.visit">{t.footer.visit}</div>
         <p class="text-sm leading-relaxed">
           {restaurant.address.line1}<br/>
-          {restaurant.address.line2[lang]}<br/>
+          <span data-i18n-addrline2>{restaurant.address.line2[lang]}</span><br/>
           {restaurant.address.province}
         </p>
         <a
           href={restaurant.social.googleMapsUrl}
           target="_blank"
           rel="noopener"
+          data-i18n="location.getDirections"
           class="inline-flex items-center gap-2 mt-5 text-[12px] uppercase tracking-[0.2em] text-copper hover:text-ivory transition-colors"
         >
           {t.location.getDirections} →
@@ -65,8 +73,8 @@ const navLinks = [
     </div>
 
     <div class="mt-16 pt-8 border-t border-ivory/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-[11px] uppercase tracking-[0.2em] text-ivory/40">
-      <div>{t.footer.copyright} {year} OASIS Restaurant</div>
-      <div>{t.footer.location}</div>
+      <div><span data-i18n="footer.copyright">{t.footer.copyright}</span> {year} OASIS Restaurant</div>
+      <div data-i18n="footer.location">{t.footer.location}</div>
     </div>
   </div>
 </footer>

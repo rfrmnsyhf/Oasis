@@ -1,0 +1,75 @@
+---
+import type { Lang } from "../utils/i18n";
+
+interface Props {
+  lang: Lang;
+  variant: "desktop" | "mobile";
+  idHref: string;
+  enHref: string;
+}
+
+const { lang, variant, idHref, enHref } = Astro.props;
+
+const desktopCls = (active: boolean) =>
+  active
+    ? "bg-ivory text-forest border border-ivory shadow-[0_0_0_1px_rgba(23,27,22,0.15)]"
+    : "text-ivory/80 hover:text-ivory border border-transparent";
+
+const mobileCls = (active: boolean) =>
+  active
+    ? "bg-forest text-ivory"
+    : "text-forest/70 hover:text-forest";
+---
+
+{variant === "desktop" ? (
+  <div
+    class="inline-flex items-stretch text-[11px] uppercase tracking-[0.22em] border border-ivory/40 transition-colors duration-500 rounded-sm overflow-hidden"
+    data-langtoggle
+    role="group"
+    aria-label="Language switcher"
+  >
+    <a
+      href={idHref}
+      aria-current={lang === "id" ? "true" : undefined}
+      aria-label="Bahasa Indonesia"
+      data-langbtn
+      data-lang-target="id"
+      data-navtoggle-active={lang === "id" ? "" : undefined}
+      class:list={["px-3 py-1.5 font-semibold transition-colors", desktopCls(lang === "id")]}
+    >ID</a>
+    <span class="w-px bg-ivory/30" aria-hidden="true"></span>
+    <a
+      href={enHref}
+      aria-current={lang === "en" ? "true" : undefined}
+      aria-label="English"
+      data-langbtn
+      data-lang-target="en"
+      data-navtoggle-active={lang === "en" ? "" : undefined}
+      class:list={["px-3 py-1.5 font-semibold transition-colors", desktopCls(lang === "en")]}
+    >EN</a>
+  </div>
+) : (
+  <div
+    class="inline-flex items-stretch text-[11px] uppercase tracking-[0.22em] border border-forest/30 rounded-sm overflow-hidden w-fit"
+    role="group"
+    aria-label="Language switcher"
+  >
+    <a
+      href={idHref}
+      aria-current={lang === "id" ? "true" : undefined}
+      aria-label="Bahasa Indonesia"
+      data-langbtn
+      data-lang-target="id"
+      class:list={["px-3 py-1.5 font-semibold transition-colors", mobileCls(lang === "id")]}
+    >ID</a>
+    <span class="w-px bg-forest/30" aria-hidden="true"></span>
+    <a
+      href={enHref}
+      aria-current={lang === "en" ? "true" : undefined}
+      aria-label="English"
+      data-langbtn
+      data-lang-target="en"
+      class:list={["px-3 py-1.5 font-semibold transition-colors", mobileCls(lang === "en")]}
+    >EN</a>
+  </div>
+)}

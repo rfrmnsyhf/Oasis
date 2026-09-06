@@ -12,18 +12,19 @@ const t = ui(lang);
   <div class="max-w-7xl mx-auto px-6 lg:px-10">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end reveal">
       <div class="lg:col-span-7">
-        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">{t.gallery.eyebrow}</div>
+        <div class="text-[11px] uppercase tracking-[0.32em] text-copper" data-i18n="gallery.eyebrow">{t.gallery.eyebrow}</div>
         <h2 class="font-display text-4xl sm:text-5xl lg:text-7xl leading-[0.98] mt-4">
-          {t.gallery.headline1}<br/>
-          <em class="italic font-light">{t.gallery.headlineEm}</em>
+          <span data-i18n="gallery.headline1">{t.gallery.headline1}</span><br/>
+          <em data-i18n="gallery.headlineEm" class="italic font-light">{t.gallery.headlineEm}</em>
         </h2>
       </div>
       <div class="lg:col-span-5">
-        <p class="text-charcoal/70 text-base lg:text-lg leading-relaxed">
+        <p class="text-charcoal/70 text-base lg:text-lg leading-relaxed" data-i18n="gallery.body">
           {t.gallery.body}
         </p>
         <a
           href={`/gallery${lang === "en" ? "?lang=en" : ""}`}
+          data-i18n="gallery.seeAll"
           class="inline-flex items-center gap-2 mt-5 text-[12px] uppercase tracking-[0.22em] text-forest hover:text-copper transition-colors"
         >
           {t.gallery.seeAll} →
@@ -46,12 +47,16 @@ const t = ui(lang);
           >
             <img
               src={g.src}
+              data-i18n-alt={i}
               alt={galleryAlt(g, lang)}
               class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.06]"
               loading="lazy"
             />
             <div class="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/20 transition-colors duration-500"></div>
-            <div class="absolute left-3 bottom-3 text-[10px] uppercase tracking-[0.22em] text-ivory/0 group-hover:text-ivory/90 transition-colors">
+            <div
+              data-i18n-tag={g.tag}
+              class="absolute left-3 bottom-3 text-[10px] uppercase tracking-[0.22em] text-ivory/0 group-hover:text-ivory/90 transition-colors"
+            >
               {galleryTagText(g.tag, lang)}
             </div>
           </a>

@@ -1,0 +1,17 @@
+---
+import type { Lang } from "../utils/i18n";
+
+export interface Props {
+  id: string;
+  en: string;
+  as?: string;
+  class?: string;
+}
+
+const { id, en, as: Tag = "span", class: className = "" } = Astro.props;
+---
+
+<Tag class:list={[className]} data-i18n>
+  <span data-i18n-id>{id}</span>
+  <span data-i18n-en hidden>{en}</span>
+</Tag>

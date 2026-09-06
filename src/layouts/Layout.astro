@@ -5,7 +5,12 @@ import Footer from "../components/Footer.astro";
 import BottomNav from "../components/mobile/BottomNav.astro";
 import { restaurant } from "../data/restaurant";
 import { pickLang, type Lang } from "../utils/i18n";
-import { ui } from "../data/translations";
+import { ui, enDict, idDict } from "../data/translations";
+import { menu } from "../data/menu";
+import { featuredReviews } from "../data/reviews";
+import { experienceMoments } from "../data/experience";
+import { gallery } from "../data/gallery";
+import { hotTeas } from "../data/menu";
 
 export interface Props {
   title?: string;
@@ -31,6 +36,68 @@ const ogTitle = lang === "en"
 const ogDescription = lang === "en"
   ? description
   : "Temukan OASIS Restaurant di Tanjungpinang. Modern dining, hidangan Asia, minuman segar, dan ruang aesthetic untuk makan, berkumpul, dan selebrasi.";
+
+// Build full bilingual lookup tables for runtime swap (data on the page)
+const dayPairs = restaurant.hours.map((h) => ({ id: h.day.id, en: h.day.en }));
+const dayIdMap: Record<string, string> = {};
+const dayEnMap: Record<string, string> = {};
+for (const d of dayPairs) { dayIdMap[d.en] = d.id; dayEnMap[d.id] = d.en; }
+const servicesId: string[] = restaurant.services.id;
+const servicesEn: string[] = restaurant.services.en;
+const addressLine2: Record<"id" | "en", string> = {
+  id: restaurant.address.line2.id,
+  en: restaurant.address.line2.en,
+};
+const menuEn: Array<{ name: { id: string; en: string }; description: { id: string; en: string }; category: string }> = menu.map((m) => ({
+  name: { id: m.name.id, en: m.name.en },
+  description: { id: m.description.id, en: m.description.en },
+  category: m.category,
+}));
+const reviewsEn: Array<{ quote: { id: string; en: string }; author: { id: string; en: string }; source: { id: string; en: string } }> = featuredReviews.map((r) => ({
+  quote: { id: r.quote.id, en: r.quote.en },
+  author: { id: r.author.id, en: r.author.en },
+  source: { id: r.source.id, en: r.source.en },
+}));
+const experienceEn = experienceMoments.map((m) => ({ index: m.index, title: m.title.en, body: m.body.en }));
+const galleryEn = gallery.map((g) => ({ alt: g.alt.en, tag: g.tag }));
+const hotTeasEn = hotTeas.map((h) => h.en);
+const hotTeasId = hotTeas.map((h) => h.id);
+const categoriesEn: Array<{ id: string; label: string }> = [
+  { id: "main-course", label: "Main Course" },
+  { id: "breakfast", label: "Breakfast" },
+  { id: "appetizers", label: "Appetizers" },
+  { id: "salad-soup", label: "Salad & Soup" },
+  { id: "dessert", label: "Dessert" },
+  { id: "cold-drinks", label: "Cold Drinks" },
+  { id: "hot-tea", label: "Hot Tea" },
+];
+const categoriesId: Array<{ id: string; label: string }> = [
+  { id: "main-course", label: "Main Course" },
+  { id: "breakfast", label: "Breakfast" },
+  { id: "appetizers", label: "Appetizers" },
+  { id: "salad-soup", label: "Salad & Soup" },
+  { id: "dessert", label: "Dessert" },
+  { id: "cold-drinks", label: "Cold Drinks" },
+  { id: "hot-tea", label: "Hot Tea" },
+];
+
+const i18nData = {
+  enDict,
+  idDict,
+  dayIdMap,
+  dayEnMap,
+  servicesId,
+  servicesEn,
+  addressLine2,
+  menuEn,
+  reviewsEn,
+  experienceEn,
+  galleryEn,
+  hotTeasEn,
+  hotTeasId,
+  categoriesEn,
+  categoriesId,
+};
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -58,7 +125,7 @@ const jsonLd = {
 ---
 
 <!doctype html>
-<html lang={lang === "en" ? "en" : "id"} data-lang={lang}>
+<html lang="id" data-lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -98,7 +165,7 @@ const jsonLd = {
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
-  <body class="bg-ivory text-charcoal antialiased" data-lang={lang}>
+  <body class="bg-ivory text-charcoal antialiased" data-lang="id">
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:bg-forest focus:text-ivory focus:px-4 focus:py-2 focus:rounded"
@@ -112,6 +179,133 @@ const jsonLd = {
     </main>
     {!noFooter && <Footer lang={lang} />}
     <BottomNav lang={lang} />
+
+    <script type="application/json" id="i18n-data" set:html={JSON.stringify(i18nData)} />
+
+    <script is:inline>
+      (function () {
+        var raw = document.getElementById("i18n-data");
+        if (!raw || !raw.textContent) return;
+        var data;
+        try { data = JSON.parse(raw.textContent); } catch (e) { return; }
+
+        function swapText(sel, idxAttr, get) {
+          var nodes = document.querySelectorAll(sel);
+          for (var i = 0; i < nodes.length; i++) {
+            var el = nodes[i];
+            var idx = idxAttr ? Number(el.getAttribute(idxAttr)) : 0;
+            if (idxAttr && !isFinite(idx)) continue;
+            var v = get(idx, el);
+            if (v != null) el.textContent = v;
+          }
+        }
+
+        function swapAttr(sel) {
+          var nodes = document.querySelectorAll(sel);
+          for (var i = 0; i < nodes.length; i++) {
+            var el = nodes[i];
+            var spec = el.getAttribute("data-i18n-attr");
+            if (!spec) continue;
+            var pairs = spec.split(";");
+            for (var j = 0; j < pairs.length; j++) {
+              var p = pairs[j];
+              var ci = p.indexOf(":");
+              if (ci < 0) continue;
+              var attr = p.substring(0, ci).trim();
+              var key = p.substring(ci + 1).trim();
+              if (!attr || !key) continue;
+              var v = (data.currentDict && data.currentDict[key]) || (data.idDict[key]) || (data.enDict[key]);
+              if (v != null) el.setAttribute(attr, v);
+            }
+          }
+        }
+
+        function applyLang(lang) {
+          var d = lang === "en" ? data.enDict : data.idDict;
+          document.documentElement.setAttribute("lang", lang);
+          document.documentElement.setAttribute("data-lang", lang);
+          document.body.setAttribute("data-lang", lang);
+          data.currentDict = d;
+
+          var i18nNodes = document.querySelectorAll("[data-i18n]");
+          for (var i = 0; i < i18nNodes.length; i++) {
+            var el = i18nNodes[i];
+            var k = el.getAttribute("data-i18n");
+            if (k && d[k] != null) el.textContent = d[k];
+          }
+          swapAttr("[data-i18n-attr]");
+
+          swapText("[data-i18n-name]", "data-i18n-name", function (i) { return data.menuEn[i] && data.menuEn[i].name[lang]; });
+          swapText("[data-i18n-desc]", "data-i18n-desc", function (i) { return data.menuEn[i] && data.menuEn[i].description[lang]; });
+          swapText("[data-i18n-cat]", "data-i18n-cat", function (i) {
+            var list = lang === "en" ? data.categoriesEn : data.categoriesId;
+            return list[i] && list[i].label;
+          });
+
+          swapText("[data-i18n-rquote]", "data-i18n-rquote", function (i) { return data.reviewsEn[i] && data.reviewsEn[i].quote[lang]; });
+          swapText("[data-i18n-rauthor]", "data-i18n-rauthor", function (i) { return data.reviewsEn[i] && data.reviewsEn[i].author[lang]; });
+          swapText("[data-i18n-rsource]", "data-i18n-rsource", function (i) { return data.reviewsEn[i] && data.reviewsEn[i].source[lang]; });
+
+          swapText("[data-i18n-xptitle]", "data-i18n-xptitle", function (i) { return data.experienceEn[i] && data.experienceEn[i].title; });
+          swapText("[data-i18n-xpbody]", "data-i18n-xpbody", function (i) { return data.experienceEn[i] && data.experienceEn[i].body; });
+
+          swapText("[data-i18n-alt]", "data-i18n-alt", function (i) { return data.galleryEn[i] && data.galleryEn[i].alt; });
+          swapText("[data-i18n-tag]", "data-i18n-tag", function (i, el) {
+            var tag = el.getAttribute("data-i18n-tag");
+            var key = "gallery." + (tag ? tag.charAt(0).toUpperCase() + tag.slice(1) : "");
+            return d[key];
+          });
+
+          var dayNodes = document.querySelectorAll("[data-i18n-day]");
+          for (var k = 0; k < dayNodes.length; k++) {
+            var dn = dayNodes[k];
+            var idVal = dn.getAttribute("data-i18n-day") || "";
+            dn.textContent = lang === "en" ? (data.dayEnMap[idVal] || idVal) : idVal;
+          }
+
+          var addrNodes = document.querySelectorAll("[data-i18n-addrline2]");
+          for (var m = 0; m < addrNodes.length; m++) {
+            addrNodes[m].textContent = data.addressLine2[lang];
+          }
+
+          swapText("[data-i18n-service]", "data-i18n-service", function (i) {
+            var arr = lang === "en" ? data.servicesEn : data.servicesId;
+            return arr[i];
+          });
+
+          swapText("[data-i18n-teas]", null, function () {
+            var teas = lang === "en" ? data.hotTeasEn : data.hotTeasId;
+            return Array.isArray(teas) ? teas.join(" · ") : null;
+          });
+        }
+
+        function getLangFromUrl() {
+          var m = location.search.match(/[?&]lang=(en|id)/);
+          return m ? m[1] : "id";
+        }
+
+        var currentLang = getLangFromUrl();
+        applyLang(currentLang);
+
+        document.addEventListener("click", function (e) {
+          var t = e.target;
+          if (!t || typeof t.closest !== "function") return;
+          var a = t.closest("a[data-langbtn]");
+          if (!a) return;
+          e.preventDefault();
+          var href = a.getAttribute("href") || "";
+          var m = href.match(/[?&]lang=(en|id)/);
+          if (!m) return;
+          var next = m[1];
+          if (next === currentLang) return;
+          currentLang = next;
+          var url = new URL(location.href);
+          url.searchParams.set("lang", next);
+          history.replaceState(null, "", url.toString());
+          applyLang(next);
+        });
+      })();
+    </script>
 
     <script>
       const io = new IntersectionObserver(

@@ -1,6 +1,7 @@
 ---
 import { ui } from "../data/translations";
 import type { Lang } from "../utils/i18n";
+import LangSwitch from "./LangSwitch.astro";
 
 interface Props {
   lang: Lang;
@@ -8,20 +9,20 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = ui(lang);
-const otherLang: Lang = lang === "en" ? "id" : "en";
 const path = Astro.url.pathname;
-const switchHref = `${path}${path.includes("?") ? "&" : "?"}lang=${otherLang}`;
+const sep = path.includes("?") ? "&" : "?";
+const idHref = `${path}${sep}lang=id`;
+const enHref = `${path}${sep}lang=en`;
+const withLang = (href: string) => `${href}${sep}lang=${lang}`;
 
-const links = [
-  { href: `?lang=${lang}`.includes("?") ? `${path}?lang=${lang}#menu` : `?lang=${lang}`, label: t.nav.menu, plain: "/menu" },
-];
 const navItems = [
-  { href: "/menu", label: t.nav.menu },
-  { href: `/?lang=${lang}#experience`, label: t.nav.experience },
-  { href: "/gallery", label: t.nav.gallery },
-  { href: "/reviews", label: t.nav.reviews },
-  { href: "/location", label: t.nav.location },
+  { href: withLang("/menu"), label: t.nav.menu },
+  { href: withLang("/") + "#experience", label: t.nav.experience },
+  { href: withLang("/gallery"), label: t.nav.gallery },
+  { href: withLang("/reviews"), label: t.nav.reviews },
+  { href: withLang("/location"), label: t.nav.location },
 ];
+const reserveHref = withLang("/reserve");
 ---
 
 <header
@@ -30,39 +31,36 @@ const navItems = [
   data-state="top"
 >
   <nav class="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-10 py-5 lg:py-6 gap-4">
-    <a href={`/?lang=${lang}`} class="font-display text-2xl lg:text-3xl tracking-tight text-ivory data-[on=top]:text-ivory data-[on=scrolled]:text-forest transition-colors duration-500" data-navmark>
+    <a
+      href={withLang("/")}
+      class="font-display text-2xl lg:text-3xl tracking-tight text-ivory transition-colors duration-500"
+      data-navmark
+    >
       OASIS
     </a>
 
-    <ul class="hidden md:flex items-center gap-7 lg:gap-9 text-[12px] uppercase tracking-[0.18em] text-ivory/85 data-[on=scrolled]:text-forest/80 transition-colors duration-500" data-navlinks>
-      {navItems.map((l) => (
+    <ul
+      class="hidden md:flex items-center gap-7 lg:gap-9 text-[12px] uppercase tracking-[0.18em] text-ivory/85 transition-colors duration-500"
+      data-navlinks
+    >
+      {navItems.map((l, i) => (
         <li>
           <a
             href={l.href}
+            data-i18n={["nav.menu", "nav.experience", "nav.gallery", "nav.reviews", "nav.location"][i]}
             class="hover:text-copper transition-colors"
-            data-navmark-link
           >{l.label}</a>
         </li>
       ))}
     </ul>
 
     <div class="hidden md:flex items-center gap-3">
-      <div class="flex items-center text-[11px] uppercase tracking-[0.2em] border border-ivory/30 data-[on=scrolled]:border-forest/30" data-langtoggle>
-        <a
-          href={`${path}${path.includes("?") ? "&" : "?"}lang=id`}
-          class:list={["px-3 py-1.5 transition-colors", lang === "id" ? "bg-ivory text-forest" : "text-ivory/70 hover:text-ivory data-[on=scrolled]:text-forest/70 data-[on=scrolled]:hover:text-forest"]}
-          data-langbtn
-        >ID</a>
-        <a
-          href={`${path}${path.includes("?") ? "&" : "?"}lang=en`}
-          class:list={["px-3 py-1.5 transition-colors", lang === "en" ? "bg-ivory text-forest" : "text-ivory/70 hover:text-ivory data-[on=scrolled]:text-forest/70 data-[on=scrolled]:hover:text-forest"]}
-          data-langbtn
-        >EN</a>
-      </div>
+      <LangSwitch lang={lang} variant="desktop" idHref={idHref} enHref={enHref} />
       <a
-        href={`/reserve${lang === "en" ? "?lang=en" : ""}`}
-        class="inline-flex items-center gap-2 px-5 py-2.5 text-[12px] uppercase tracking-[0.2em] border border-ivory/40 text-ivory hover:bg-ivory hover:text-forest transition-all duration-300 data-[on=scrolled]:border-forest data-[on=scrolled]:text-forest data-[on=scrolled]:hover:bg-forest data-[on=scrolled]:hover:text-ivory"
+        href={reserveHref}
+        class="inline-flex items-center gap-2 px-5 py-2.5 text-[12px] uppercase tracking-[0.2em] border border-ivory/40 text-ivory hover:bg-ivory hover:text-forest transition-all duration-300"
         data-navcta
+        data-i18n="nav.reserve"
       >
         {t.nav.reserve}
       </a>
@@ -70,7 +68,9 @@ const navItems = [
 
     <button
       id="nav-toggle"
-      class="md:hidden text-ivory data-[on=scrolled]:text-forest transition-colors"
+      class="md:hidden text-ivory transition-colors"
+      data-i18n-aria="nav.homeAria"
+      data-i18n-attr="aria-label:nav.homeAria"
       aria-label={t.nav.homeAria}
       aria-expanded="false"
     >
@@ -86,68 +86,78 @@ const navItems = [
     class="md:hidden hidden bg-ivory/95 backdrop-blur-lg border-t border-charcoal/10"
   >
     <ul class="flex flex-col py-6 px-6 gap-4 text-sm uppercase tracking-[0.18em] text-forest">
-      {navItems.map((l) => (
-        <li><a href={l.href} class="block py-1">{l.label}</a></li>
+      {navItems.map((l, i) => (
+        <li>
+          <a
+            href={l.href}
+            data-i18n={["nav.menu", "nav.experience", "nav.gallery", "nav.reviews", "nav.location"][i]}
+            class="block py-1"
+          >{l.label}</a>
+        </li>
       ))}
       <li>
-        <a href={`/reserve${lang === "en" ? "?lang=en" : ""}`} class="inline-block mt-2 px-5 py-2.5 border border-forest text-forest uppercase tracking-[0.2em] text-[12px]">
+        <a
+          href={reserveHref}
+          data-i18n="nav.reserve"
+          class="inline-block mt-2 px-5 py-2.5 border border-forest text-forest uppercase tracking-[0.2em] text-[12px]"
+        >
           {t.nav.reserve}
         </a>
       </li>
       <li>
-        <div class="flex items-center text-[11px] uppercase tracking-[0.2em] border border-charcoal/20 w-fit">
-          <a href={`${path}${path.includes("?") ? "&" : "?"}lang=id`} class:list={["px-3 py-1.5", lang === "id" ? "bg-forest text-ivory" : "text-forest"]}>ID</a>
-          <a href={`${path}${path.includes("?") ? "&" : "?"}lang=en`} class:list={["px-3 py-1.5", lang === "en" ? "bg-forest text-ivory" : "text-forest"]}>EN</a>
-        </div>
+        <LangSwitch lang={lang} variant="mobile" idHref={idHref} enHref={enHref} />
       </li>
     </ul>
   </div>
 </header>
 
-<script>
-  const nav = document.getElementById("site-nav");
-  if (nav) {
-    const setState = (state: "top" | "scrolled") => {
-      nav.dataset.state = state;
-      nav.querySelectorAll<HTMLElement>("[data-navmark]").forEach((el) => {
-        el.dataset.on = state;
-        if (state === "top") {
-          el.classList.add("text-ivory");
-          el.classList.remove("text-forest");
-        } else {
-          el.classList.add("text-forest");
-          el.classList.remove("text-ivory");
+    <script>
+      const nav = document.getElementById("site-nav");
+      if (nav) {
+        const setState = (state: "top" | "scrolled") => {
+          nav.dataset.state = state;
+          nav.querySelectorAll<HTMLElement>("[data-navmark]").forEach((el) => {
+            if (state === "top") {
+              el.classList.add("text-ivory");
+              el.classList.remove("text-forest");
+            } else {
+              el.classList.add("text-forest");
+              el.classList.remove("text-ivory");
+            }
+          });
+          nav.querySelectorAll<HTMLElement>("[data-navlinks]").forEach((el) => {
+            el.classList.toggle("text-ivory/85", state === "top");
+            el.classList.toggle("text-forest/85", state === "scrolled");
+          });
+          nav.querySelectorAll<HTMLElement>("[data-navcta]").forEach((el) => {
+            el.classList.toggle("border-ivory/40", state === "top");
+            el.classList.toggle("text-ivory", state === "top");
+            el.classList.toggle("hover:bg-ivory", state === "top");
+            el.classList.toggle("hover:text-forest", state === "top");
+            el.classList.toggle("border-forest", state === "scrolled");
+            el.classList.toggle("text-forest", state === "scrolled");
+            el.classList.toggle("hover:bg-forest", state === "scrolled");
+            el.classList.toggle("hover:text-ivory", state === "scrolled");
+          });
+          nav.classList.toggle("glass", state === "scrolled");
+        };
+
+        const onScroll = () => {
+          setState(window.scrollY > 40 ? "scrolled" : "top");
+        };
+        window.addEventListener("scroll", onScroll, { passive: true });
+        onScroll();
+
+        const toggle = document.getElementById("nav-toggle");
+        const mobile = document.getElementById("nav-mobile");
+        if (toggle && mobile) {
+          toggle.addEventListener("click", () => {
+            const open = mobile.classList.toggle("hidden") === false;
+            toggle.setAttribute("aria-expanded", String(open));
+          });
+          mobile.querySelectorAll("a").forEach((a) =>
+            a.addEventListener("click", () => mobile.classList.add("hidden")),
+          );
         }
-      });
-      nav.querySelectorAll<HTMLElement>("[data-navlinks]").forEach((el) => el.dataset.on = state);
-      nav.querySelectorAll<HTMLElement>("[data-navcta]").forEach((el) => el.dataset.on = state);
-      nav.querySelectorAll<HTMLElement>("[data-langtoggle]").forEach((el) => el.dataset.on = state);
-      nav.querySelectorAll<HTMLElement>("[data-langbtn]").forEach((el) => el.dataset.on = state);
-      nav.querySelectorAll<HTMLElement>("#nav-toggle").forEach((el) => el.dataset.on = state);
-      if (state === "scrolled") {
-        nav.classList.add("glass");
-        nav.classList.remove("text-ivory");
-      } else {
-        nav.classList.remove("glass");
       }
-    };
-
-    const onScroll = () => {
-      setState(window.scrollY > 40 ? "scrolled" : "top");
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-
-    const toggle = document.getElementById("nav-toggle");
-    const mobile = document.getElementById("nav-mobile");
-    if (toggle && mobile) {
-      toggle.addEventListener("click", () => {
-        const open = mobile.classList.toggle("hidden") === false;
-        toggle.setAttribute("aria-expanded", String(open));
-      });
-      mobile.querySelectorAll("a").forEach((a) =>
-        a.addEventListener("click", () => mobile.classList.add("hidden")),
-      );
-    }
-  }
-</script>
+    </script>

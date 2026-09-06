@@ -349,3 +349,27 @@ export const ui = (lang: Lang) => {
 
   return lang === "en" ? en : id;
 };
+
+// Hoist references to the inner objects so we can flatten them at module load.
+const _id = (ui as unknown as (lang: Lang) => Record<string, unknown>)("id");
+const _en = (ui as unknown as (lang: Lang) => Record<string, unknown>)("en");
+
+type EnObj = typeof _en;
+type IdObj = typeof _id;
+
+const flatten = (obj: Record<string, unknown>, prefix = ""): Record<string, string> => {
+  const out: Record<string, string> = {};
+  for (const [k, v] of Object.entries(obj)) {
+    const key = prefix ? `${prefix}.${k}` : k;
+    if (typeof v === "string") out[key] = v;
+    else if (Array.isArray(v)) out[key] = v.join(" · ");
+    else if (v && typeof v === "object") Object.assign(out, flatten(v as Record<string, unknown>, key));
+  }
+  return out;
+};
+
+export const enDict: Record<string, string> = flatten(_en as Record<string, unknown>);
+export const idDict: Record<string, string> = flatten(_id as Record<string, unknown>);
+
+export const i18nDict = (lang: "id" | "en") => (lang === "en" ? enDict : idDict);
+

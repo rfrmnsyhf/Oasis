@@ -5,11 +5,12 @@ import type { Lang } from "../../utils/i18n";
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = ui(lang);
+const langQ = lang === "en" ? "?lang=en" : "";
 const items = [
-  { href: `/?lang=${lang}`, label: t.bottomNav.home, icon: "home" },
-  { href: `/menu${lang === "en" ? "?lang=en" : ""}`, label: t.bottomNav.menu, icon: "menu" },
-  { href: `/gallery${lang === "en" ? "?lang=en" : ""}`, label: t.bottomNav.gallery, icon: "gallery" },
-  { href: `/reserve${lang === "en" ? "?lang=en" : ""}`, label: t.bottomNav.reserve, icon: "reserve", primary: true },
+  { href: `/${langQ}`, label: t.bottomNav.home, icon: "home" },
+  { href: `/menu${langQ}`, label: t.bottomNav.menu, icon: "menu" },
+  { href: `/gallery${langQ}`, label: t.bottomNav.gallery, icon: "gallery" },
+  { href: `/reserve${langQ}`, label: t.bottomNav.reserve, icon: "reserve", primary: true },
 ];
 ---
 
@@ -51,7 +52,9 @@ const items = [
               <path d="M3 9h18M8 3v4M16 3v4" />
             </svg>
           )}
-          <span>{it.label}</span>
+          <span
+            data-i18n={["bottomNav.home", "bottomNav.menu", "bottomNav.gallery", "bottomNav.reserve"][["home","menu","gallery","reserve"].indexOf(it.icon)]}
+          >{it.label}</span>
         </a>
       </li>
     ))}

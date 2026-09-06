@@ -12,20 +12,22 @@ const featured = menu.filter((i) => i.featured);
 const lead = featured[0];
 const rest = featured.slice(1, 5);
 const menuHref = `/menu${lang === "en" ? "?lang=en" : ""}`;
+const idxOf = (it: typeof menu[number]) => menu.findIndex((m) => m.name.id === it.name.id);
 ---
 
 <section id="menu-preview" class="bg-ivory py-24 lg:py-36">
   <div class="max-w-7xl mx-auto px-6 lg:px-10">
     <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 reveal">
       <div>
-        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">{t.favourites.eyebrow}</div>
+        <div class="text-[11px] uppercase tracking-[0.32em] text-copper" data-i18n="favourites.eyebrow">{t.favourites.eyebrow}</div>
         <h2 class="font-display text-4xl sm:text-5xl lg:text-7xl leading-[0.98] mt-4">
-          {t.favourites.headline1}<br/>
-          <em class="italic font-light">{t.favourites.headlineEm}</em>
+          <span data-i18n="favourites.headline1">{t.favourites.headline1}</span><br/>
+          <em data-i18n="favourites.headlineEm" class="italic font-light">{t.favourites.headlineEm}</em>
         </h2>
       </div>
       <a
         href={menuHref}
+        data-i18n="favourites.viewAll"
         class="self-start md:self-end inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.22em] text-forest hover:text-copper transition-colors"
       >
         {t.favourites.viewAll} →
@@ -47,12 +49,12 @@ const menuHref = `/menu${lang === "en" ? "?lang=en" : ""}`;
         </div>
         <div class="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/20 to-transparent"></div>
         <div class="absolute left-7 right-7 bottom-7 text-ivory">
-          <div class="text-[10px] uppercase tracking-[0.32em] text-copper/90">{t.favourites.signature}</div>
-          <h3 class="font-display text-3xl lg:text-5xl leading-tight mt-3">{itemName(lead, lang)}</h3>
-          <p class="mt-3 text-ivory/80 text-sm max-w-md leading-relaxed line-clamp-2">{itemDescription(lead, lang)}</p>
+          <div class="text-[10px] uppercase tracking-[0.32em] text-copper/90" data-i18n="favourites.signature">{t.favourites.signature}</div>
+          <h3 class="font-display text-3xl lg:text-5xl leading-tight mt-3" data-i18n-name={idxOf(lead)}>{itemName(lead, lang)}</h3>
+          <p class="mt-3 text-ivory/80 text-sm max-w-md leading-relaxed line-clamp-2" data-i18n-desc={idxOf(lead)}>{itemDescription(lead, lang)}</p>
           <div class="mt-4 flex items-center justify-between text-[12px] uppercase tracking-[0.22em]">
             <span>Rp {formatShort(lead.price)}</span>
-            <span class="text-copper group-hover:translate-x-1 transition-transform">{t.favourites.readMore} →</span>
+            <span class="text-copper group-hover:translate-x-1 transition-transform"><span data-i18n="favourites.readMore">{t.favourites.readMore}</span> →</span>
           </div>
         </div>
       </a>
@@ -73,7 +75,7 @@ const menuHref = `/menu${lang === "en" ? "?lang=en" : ""}`;
           <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/10 to-transparent"></div>
           <div class="absolute left-5 right-5 bottom-5 text-ivory flex items-end justify-between gap-3">
             <div>
-              <div class="font-display text-2xl lg:text-3xl leading-tight">{itemName(item, lang)}</div>
+              <div class="font-display text-2xl lg:text-3xl leading-tight" data-i18n-name={idxOf(item)}>{itemName(item, lang)}</div>
               <div class="text-[12px] uppercase tracking-[0.22em] text-ivory/70 mt-1">Rp {formatShort(item.price)}</div>
             </div>
             <span class="text-copper text-sm group-hover:translate-x-1 transition-transform">→</span>

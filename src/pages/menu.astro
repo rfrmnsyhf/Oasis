@@ -7,6 +7,8 @@ import { pickLang } from "../utils/i18n";
 
 const lang = pickLang(Astro.url.searchParams.get("lang"));
 const t = ui(lang);
+const idxOf = (it: typeof menu[number]) => menu.findIndex((m) => m.name.id === it.name.id);
+const catIdx = (cId: Category) => categories.findIndex((c) => c.id === cId);
 ---
 
 <Layout
@@ -15,9 +17,9 @@ const t = ui(lang);
 >
   <section class="bg-ivory pt-32 pb-12 lg:pt-40 lg:pb-16">
     <div class="max-w-7xl mx-auto px-6 lg:px-10">
-      <div class="text-[11px] uppercase tracking-[0.32em] text-copper">{t.menuPage.eyebrow}</div>
-      <h1 class="font-display text-5xl lg:text-8xl leading-[0.95] mt-4">{t.menuPage.title}</h1>
-      <p class="mt-6 text-charcoal/70 max-w-xl text-base lg:text-lg">
+      <div class="text-[11px] uppercase tracking-[0.32em] text-copper" data-i18n="menuPage.eyebrow">{t.menuPage.eyebrow}</div>
+      <h1 class="font-display text-5xl lg:text-8xl leading-[0.95] mt-4" data-i18n="menuPage.title">{t.menuPage.title}</h1>
+      <p class="mt-6 text-charcoal/70 max-w-xl text-base lg:text-lg" data-i18n="menuPage.body">
         {t.menuPage.body}
       </p>
     </div>
@@ -30,14 +32,16 @@ const t = ui(lang);
           <a
             href="#all"
             data-cat="all"
+            data-i18n="menuPage.all"
             class="cat-tab px-4 py-2 text-[12px] uppercase tracking-[0.22em] text-forest border-b-2 border-copper"
           >{t.menuPage.all}</a>
         </li>
-        {categories.map((c) => (
+        {categories.map((c, i) => (
           <li>
             <a
               href={`#${c.id}`}
               data-cat={c.id}
+              data-i18n-cat={i}
               class="cat-tab px-4 py-2 text-[12px] uppercase tracking-[0.22em] text-charcoal/60 hover:text-forest border-b-2 border-transparent transition-colors"
             >{categoryLabel(c, lang)}</a>
           </li>
@@ -49,7 +53,7 @@ const t = ui(lang);
   <section class="bg-ivory py-16 lg:py-24">
     <div class="max-w-7xl mx-auto px-6 lg:px-10">
       <div id="cat-all" class="mb-20">
-        <h2 class="font-display text-3xl lg:text-4xl mb-8">{t.menuPage.all}</h2>
+        <h2 class="font-display text-3xl lg:text-4xl mb-8" data-i18n="menuPage.all">{t.menuPage.all}</h2>
         <ul class="divide-y divide-charcoal/10">
           {menu.map((it) => (
             <li
@@ -59,13 +63,22 @@ const t = ui(lang);
             >
               <div class="flex items-baseline justify-between gap-6">
                 <div>
-                  <div class="font-display text-2xl lg:text-3xl leading-tight group-hover:text-forest transition-colors">
+                  <div
+                    class="font-display text-2xl lg:text-3xl leading-tight group-hover:text-forest transition-colors"
+                    data-i18n-name={idxOf(it)}
+                  >
                     {itemName(it, lang)}
                   </div>
-                  <p class="mt-2 text-sm text-charcoal/65 max-w-2xl leading-relaxed">
+                  <p
+                    class="mt-2 text-sm text-charcoal/65 max-w-2xl leading-relaxed"
+                    data-i18n-desc={idxOf(it)}
+                  >
                     {itemDescription(it, lang)}
                   </p>
-                  <div class="mt-2 text-[10px] uppercase tracking-[0.22em] text-charcoal/40">
+                  <div
+                    class="mt-2 text-[10px] uppercase tracking-[0.22em] text-charcoal/40"
+                    data-i18n-cat={catIdx(it.category)}
+                  >
                     {categoryLabel(categories.find((c) => c.id === it.category)!, lang)}
                   </div>
                 </div>
@@ -78,12 +91,15 @@ const t = ui(lang);
         </ul>
       </div>
 
-      {categories.map((c) => {
+      {categories.map((c, ci) => {
         const items = menu.filter((i) => i.category === c.id);
         if (items.length === 0) return null;
         return (
           <div id={`cat-${c.id}`} class="mb-20 scroll-mt-32">
-            <h2 class="font-display text-3xl lg:text-4xl mb-8">{categoryLabel(c, lang)}</h2>
+            <h2
+              class="font-display text-3xl lg:text-4xl mb-8"
+              data-i18n-cat={ci}
+            >{categoryLabel(c, lang)}</h2>
             <ul class="divide-y divide-charcoal/10">
               {items.map((it) => (
                 <li
@@ -93,10 +109,16 @@ const t = ui(lang);
                 >
                   <div class="flex items-baseline justify-between gap-6">
                     <div>
-                      <div class="font-display text-2xl lg:text-3xl leading-tight group-hover:text-forest transition-colors">
+                      <div
+                        class="font-display text-2xl lg:text-3xl leading-tight group-hover:text-forest transition-colors"
+                        data-i18n-name={idxOf(it)}
+                      >
                         {itemName(it, lang)}
                       </div>
-                      <p class="mt-2 text-sm text-charcoal/65 max-w-2xl leading-relaxed">
+                      <p
+                        class="mt-2 text-sm text-charcoal/65 max-w-2xl leading-relaxed"
+                        data-i18n-desc={idxOf(it)}
+                      >
                         {itemDescription(it, lang)}
                       </p>
                     </div>

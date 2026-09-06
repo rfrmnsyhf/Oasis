@@ -14,8 +14,8 @@ const t = ui(lang);
 >
   <section class="bg-ivory pt-32 pb-12 lg:pt-40 lg:pb-16">
     <div class="max-w-7xl mx-auto px-6 lg:px-10">
-      <div class="text-[11px] uppercase tracking-[0.32em] text-copper">{t.galleryPage.eyebrow}</div>
-      <h1 class="font-display text-5xl lg:text-8xl leading-[0.95] mt-4">
+      <div class="text-[11px] uppercase tracking-[0.32em] text-copper" data-i18n="galleryPage.eyebrow">{t.galleryPage.eyebrow}</div>
+      <h1 class="font-display text-5xl lg:text-8xl leading-[0.95] mt-4" data-i18n="galleryPage.title">
         {t.galleryPage.title}
       </h1>
     </div>
@@ -36,12 +36,13 @@ const t = ui(lang);
               class:list={["group relative overflow-hidden bg-charcoal reveal", span]}
               style={`transition-delay: ${(i % 8) * 50}ms`}
             >
-              <img
-                src={g.src}
-                alt={galleryAlt(g, lang)}
-                class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.06]"
-                loading="lazy"
-              />
+            <img
+              src={g.src}
+              data-i18n-alt={i}
+              alt={galleryAlt(g, lang)}
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.06]"
+              loading="lazy"
+            />
               <div class="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/30 transition-colors duration-500"></div>
               <div class="absolute left-3 bottom-3 text-[10px] uppercase tracking-[0.22em] text-ivory/0 group-hover:text-ivory transition-colors">
                 {galleryTagText(g.tag, lang)}

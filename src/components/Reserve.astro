@@ -14,17 +14,17 @@ const formId = "reserve-form";
   <div class="max-w-7xl mx-auto px-6 lg:px-10">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
       <div class="lg:col-span-5 reveal">
-        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">{t.reserve.eyebrow}</div>
-        <h2 class="font-display text-4xl sm:text-5xl lg:text-6xl leading-[0.98] mt-4">
+        <div class="text-[11px] uppercase tracking-[0.32em] text-copper" data-i18n="reserve.eyebrow">{t.reserve.eyebrow}</div>
+        <h2 class="font-display text-4xl sm:text-5xl lg:text-6xl leading-[0.98] mt-4" data-i18n="reserve.headline">
           {t.reserve.headline}
         </h2>
-        <p class="mt-5 text-ivory/75 leading-relaxed">
+        <p class="mt-5 text-ivory/75 leading-relaxed" data-i18n="reserve.body">
           {t.reserve.body}
         </p>
 
         <div class="mt-8 space-y-2 text-sm text-ivory/70">
-          {t.reserve.steps.map((s) => (
-            <div class="flex items-center gap-3">
+          {t.reserve.steps.map((s, i) => (
+            <div class="flex items-center gap-3" data-i18n={`reserve.steps.${i}`}>
               <span class="text-copper">{s.split(".")[0]}.</span> {s.split(".").slice(1).join(".").trim()}
             </div>
           ))}
@@ -39,7 +39,7 @@ const formId = "reserve-form";
       >
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <label class="block">
-            <span class="text-[10px] uppercase tracking-[0.28em] text-ivory/60">{t.reserve.date}</span>
+            <span class="text-[10px] uppercase tracking-[0.28em] text-ivory/60" data-i18n="reserve.date">{t.reserve.date}</span>
             <input
               required
               type="date"
@@ -48,37 +48,38 @@ const formId = "reserve-form";
             />
           </label>
           <label class="block">
-            <span class="text-[10px] uppercase tracking-[0.28em] text-ivory/60">{t.reserve.time}</span>
+            <span class="text-[10px] uppercase tracking-[0.28em] text-ivory/60" data-i18n="reserve.time">{t.reserve.time}</span>
             <select
               required
               name="time"
               class="mt-2 w-full bg-transparent border-b border-ivory/30 focus:border-copper outline-none py-2 text-ivory"
             >
-              <option class="text-charcoal" value="">{t.reserve.selectTime}</option>
+              <option class="text-charcoal" value="" data-i18n="reserve.selectTime">{t.reserve.selectTime}</option>
               {["11:00","11:30","12:00","12:30","13:00","13:30","14:00","18:00","18:30","19:00","19:30","20:00","20:30","21:00"].map((time) => (
                 <option class="text-charcoal" value={time}>{time}</option>
               ))}
             </select>
           </label>
           <label class="block">
-            <span class="text-[10px] uppercase tracking-[0.28em] text-ivory/60">{t.reserve.guests}</span>
+            <span class="text-[10px] uppercase tracking-[0.28em] text-ivory/60" data-i18n="reserve.guests">{t.reserve.guests}</span>
             <select
               required
               name="guests"
               class="mt-2 w-full bg-transparent border-b border-ivory/30 focus:border-copper outline-none py-2 text-ivory"
             >
-              <option class="text-charcoal" value="">{t.reserve.select}</option>
+              <option class="text-charcoal" value="" data-i18n="reserve.select">{t.reserve.select}</option>
               {[1,2,3,4,5,6,7,8,"9+"].map((n) => (
                 <option class="text-charcoal" value={String(n)}>{n} {Number(n) === 1 ? t.reserve.guestOne : t.reserve.guestMany}</option>
               ))}
             </select>
           </label>
           <label class="block">
-            <span class="text-[10px] uppercase tracking-[0.28em] text-ivory/60">{t.reserve.name}</span>
+            <span class="text-[10px] uppercase tracking-[0.28em] text-ivory/60" data-i18n="reserve.name">{t.reserve.name}</span>
             <input
               required
               type="text"
               name="name"
+              data-i18n-attr={`placeholder:reserve.namePh`}
               class="mt-2 w-full bg-transparent border-b border-ivory/30 focus:border-copper outline-none py-2 text-ivory placeholder:text-ivory/30"
               placeholder={t.reserve.namePh}
             />
@@ -86,11 +87,12 @@ const formId = "reserve-form";
         </div>
 
         <label class="block mt-6">
-          <span class="text-[10px] uppercase tracking-[0.28em] text-ivory/60">{t.reserve.phone}</span>
+          <span class="text-[10px] uppercase tracking-[0.28em] text-ivory/60" data-i18n="reserve.phone">{t.reserve.phone}</span>
           <input
             required
             type="tel"
             name="phone"
+            data-i18n-attr={`placeholder:reserve.phonePh`}
             class="mt-2 w-full bg-transparent border-b border-ivory/30 focus:border-copper outline-none py-2 text-ivory placeholder:text-ivory/30"
             placeholder={t.reserve.phonePh}
           />
@@ -98,11 +100,15 @@ const formId = "reserve-form";
 
         <button
           type="submit"
+          data-i18n={restaurant.whatsapp ? "reserve.submit" : "reserve.submitSoon"}
           class="mt-8 w-full sm:w-auto inline-flex items-center justify-center gap-3 px-7 py-4 bg-ivory text-forest text-[13px] uppercase tracking-[0.22em] hover:bg-copper hover:text-ivory transition-colors"
         >
           {restaurant.whatsapp ? t.reserve.submit : t.reserve.submitSoon}
         </button>
-        <p class="mt-4 text-[11px] uppercase tracking-[0.22em] text-ivory/40">
+        <p
+          class="mt-4 text-[11px] uppercase tracking-[0.22em] text-ivory/40"
+          data-i18n={restaurant.whatsapp ? "reserve.note" : "reserve.noteSoon"}
+        >
           {restaurant.whatsapp ? t.reserve.note : t.reserve.noteSoon}
         </p>
       </form>

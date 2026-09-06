@@ -9,20 +9,21 @@ const { lang } = Astro.props;
 const t = ui(lang);
 
 const items = menu.filter((i) => i.category === "dessert");
+const idxOf = (it: typeof menu[number]) => menu.findIndex((m) => m.name.id === it.name.id);
 ---
 
 <section class="bg-ivory py-24 lg:py-36">
   <div class="max-w-7xl mx-auto px-6 lg:px-10">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-end reveal">
       <div class="lg:col-span-7">
-        <div class="text-[11px] uppercase tracking-[0.32em] text-copper">{t.dessert.eyebrow}</div>
+        <div class="text-[11px] uppercase tracking-[0.32em] text-copper" data-i18n="dessert.eyebrow">{t.dessert.eyebrow}</div>
         <h2 class="font-display text-4xl sm:text-5xl lg:text-7xl leading-[0.98] mt-4">
-          {t.dessert.headline1}<br/>
-          <em class="italic font-light">{t.dessert.headlineEm}</em>
+          <span data-i18n="dessert.headline1">{t.dessert.headline1}</span><br/>
+          <em data-i18n="dessert.headlineEm" class="italic font-light">{t.dessert.headlineEm}</em>
         </h2>
       </div>
       <div class="lg:col-span-5">
-        <p class="text-charcoal/70 text-base lg:text-lg leading-relaxed">
+        <p class="text-charcoal/70 text-base lg:text-lg leading-relaxed" data-i18n="dessert.body">
           {t.dessert.body}
         </p>
       </div>
@@ -42,7 +43,7 @@ const items = menu.filter((i) => i.category === "dessert");
                 />
                 <div class="absolute inset-0 bg-gradient-to-t from-charcoal/50 via-transparent to-transparent"></div>
                 <div class="absolute left-5 right-5 bottom-5 text-ivory">
-                  <div class="font-display text-2xl lg:text-3xl leading-tight">{itemName(it, lang)}</div>
+                  <div class="font-display text-2xl lg:text-3xl leading-tight" data-i18n-name={idxOf(it)}>{itemName(it, lang)}</div>
                   <div class="mt-1 text-[12px] uppercase tracking-[0.22em] text-ivory/80">Rp {formatShort(it.price)}</div>
                 </div>
               </div>
